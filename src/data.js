@@ -1,4 +1,5 @@
-export const dataSet = [
+export const data = {
+  dataSet: [
     {
       "id": "japan",
       "color": "hsl(358, 70%, 50%)",
@@ -269,4 +270,5 @@ export const dataSet = [
         }
       ]
     }
-  ];
+  ]
+};

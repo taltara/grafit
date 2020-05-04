@@ -1,23 +1,25 @@
 import React from 'react';
-import { dataSet } from "../data";
+import { data } from "../data";
 import dataGrapher from '../services/dataGrapher';
 import { ResponsiveLine } from "@nivo/line";
 import { GrafFilter } from '../cmps/GrafFilter.jsx';
+import { GrafInfo } from '../cmps/GrafInfo.jsx';
 
-import { Snackbar } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import Switch from '@material-ui/core/Switch';
+// import { Snackbar } from '@material-ui/core';
+// import { Alert } from '@material-ui/lab';
+// import Switch from '@material-ui/core/Switch';
 
 export class GrafitApp extends React.Component {
 
 
     state = {
-        data: dataSet,
+        data: data,
         name: 'Default',
         snackbar: false,
         theme: 'dark',
         average: null,
-        error: false
+        error: false,
+        grafView: 'linear'
     }
 
     componentDidMount() {
@@ -27,7 +29,7 @@ export class GrafitApp extends React.Component {
 
     graph = (data, average) => {
 
-        const { theme } = this.state;
+        const { theme, grafView } = this.state;
 
         const lineGraphSettings = {
             theme: {
@@ -41,7 +43,7 @@ export class GrafitApp extends React.Component {
             margin={{ top: 50, right: 110, bottom: 60, left: 50 }}
             xScale={{ type: 'point' }}
             yScale={{ type: 'linear', min: 'auto', max: 10, stacked: false, reverse: false }}
-            curve='cardinal'
+            curve={grafView}
             // enableArea={true}
             // areaOpacity={0.1}
             // areaBlendMode='difference'
@@ -139,13 +141,16 @@ export class GrafitApp extends React.Component {
                 this.handleSnackbar();
             });
         } else {
+
+
             dataGrapher.fitShowtoGraf(newData)
                 .then(data => {
                     console.log(data);
-                    this.setState({ data: data.dataSet, name: data.name, average: data.average, error: false }, () => {
+                    this.setState({ data: data, name: data.name, average: data.average, error: false }, () => {
                         this.handleSnackbar();
                     });
                 })
+
         }
 
     }
@@ -174,39 +179,40 @@ export class GrafitApp extends React.Component {
         this.setState({ [property]: value }, console.log(this.state));
     }
 
+    onViewChange = () => {
+
+        let nextGrafView;
+        switch (this.state.grafView) {
+            case 'linear':
+                nextGrafView = 'cardinal';
+                break;
+            case 'cardinal':
+                nextGrafView = 'monotoneY';
+                break;
+            case 'monotoneY':
+                nextGrafView = 'step';
+                break;
+            default:
+                nextGrafView = 'linear';
+                break;
+
+        }
+        this.setState({ grafView: nextGrafView })
+    }
+
     render() {
         // const [open, setOpen] = React.useState(false);
 
-        const { data, name, average, snackbar, theme, error } = this.state
+        const { data, name, average, snackbar, theme, error, grafView } = this.state
         return (
             <main className={`main-graf ${(theme === 'dark') ? 'dark-bgc' : 'light-bgc'}`}>
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center',
-                    }}
-                    open={snackbar}
-
-                ><Alert severity={(!error) ? `success` : 'error'}>
-                        {(!error) ? `Success! Showing: '${name}'` : 'Sorry, please refine your search'}</Alert></Snackbar>
-
-                <p className={`graf-title flex align-center space-center ${(theme === 'dark') ? 'light' : 'dark'}`}>
-                    {(name !== '') ? `'${name}'` : ''}</p>
-                <div className="darkmode-switch flex align-center space-center">
-                    <p className={`${(theme === 'dark') ? 'light' : 'dark'}`} >Dark-Mode</p>
-                    <Switch
-                        checked={(theme === 'dark') ? true : false}
-                        // defaultChecked
-                        onChange={this.handleDarkModeChange}
-                        name="theme"
-                        inputProps={{ 'aria-label': 'secondary checkbox' }}
-                    />
-                </div>
 
                 <main className="graf-app grid">
-
+                    <GrafInfo error={error} name={name} theme={theme} snackbar={snackbar}
+                        toggleDark={this.handleDarkModeChange} episodeCount={data.episodeCount}
+                        onViewChange={this.onViewChange} grafView={grafView} />
                     <section className="graf">
-                        {this.graph(data, average)}
+                        {this.graph(data.dataSet, average)}
                     </section>
                     <footer className="filter-section">
                         <GrafFilter onDatachange={this.onDatachange} name={name} />

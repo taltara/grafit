@@ -52,7 +52,14 @@ export class GrafFilter extends React.Component {
                     data = null;
                     this.setState({ searching: false });
                 }
-                this.props.onDatachange(data);
+
+                if(data[0].Title !== this.state.current) {
+                    console.log('NOT SAME');
+                    this.props.onDatachange(data);
+                } else  {
+                    console.log('SAME');
+                    this.setState({ searching: false });
+                }
             })
     }
 
@@ -80,18 +87,11 @@ export class GrafFilter extends React.Component {
                             value={type}
                             onChange={this.handleChange}
                         >
-                            {/* <MenuItem value=""><em>None</em></MenuItem> */}
                             <MenuItem value="movie">Movie</MenuItem>
                             <MenuItem value="series">TV Show</MenuItem>
                         </Select>
                     </FormControl>
 
-                    {/* <select type="text" name="type" ref={this.elType}>
-                        <option value="movie">Movie</option>
-                        <option value="series">TV Show</option>
-                    </select> */}
-
-                    {/* <input type="text" name="search" placeholder="Search" ref={this.elSearch} /> */}
                     <TextField id="standard-basic" label="Search" variant="standard" name="search" ref={this.elSearch} required />
                     {(searching) ?
                         <CircularProgress /> :
@@ -104,17 +104,6 @@ export class GrafFilter extends React.Component {
                             Search
                     </Button>
                     }
-                    {/* <div className="darkmode-switch flex align-center space-center">
-                        <p className={`dark`} >Dark-Mode</p>
-                        <Switch
-                            checked={false}
-                            // defaultChecked
-                            onChange={() => console.log('kaki')}
-                            name="theme"
-                            inputProps={{ 'aria-label': 'secondary checkbox' }}
-                        />
-                    </div> */}
-                    {/* <Button variant="contained" color="primary" >Search</Button> */}
                 </form>
             </section>
         );

@@ -12,12 +12,30 @@ body {
   height: 100vh;
 }
 
+.main-graf {
+  height: 100%;
+}
+
+.info-header {
+  width: 100%;
+  align-items: baseline;
+  margin: auto;
+}
+
 .graf-title {
   font-size: 1.5rem;
-  position: absolute;
-  right: calc(50% - 4.35rem);
-  margin-top: 0.25rem;
   font-weight: 700;
+  min-width: 22rem;
+  align-items: baseline;
+  width: fit-content;
+}
+
+.graf-name {
+  margin-right: 1rem;
+}
+
+.episode-count {
+  font-size: 0.75rem;
 }
 
 .dark-bgc {
@@ -38,13 +56,13 @@ body {
 
 .graf {
   position: relative;
-  top: 50px;
-  height: 1000px;
+  /* top: 50px; */
+  height: 930px;
 }
 
 .graf-app {
   height: 100%;
-  grid-template-rows: 10fr 1fr;
+  grid-template-rows: 1.5fr 10fr 1fr;
   padding-left: 4.35rem;
 }
 
@@ -54,15 +72,30 @@ body {
 }
 
 .graf-filter form {
+
+  min-height: 4rem;
+}
+
+.graf-filter form {
   height: 100%;
   width: 100%;
   background-color: rgba(152, 251, 152);
 }
 
+.info-header .MuiFab-extended {
+  height: 2.5rem;
+  padding: 0 0.5rem;
+
+}
+
 .darkmode-switch {
-  position: absolute;
+  /* position: absolute;
   right: 1rem;
-  top: 0.25rem;
+  top: 0.25rem; */
+}
+
+.MuiFab-label {
+  min-width: 6rem;
 }
 
 /* BASICS */
@@ -77,6 +110,10 @@ ul {
 
 li {
   list-style: none;
+}
+
+p {
+  margin: 0;
 }
 
 /* SIDE MENU */
@@ -155,6 +192,10 @@ li {
 
 .space-between {
   justify-content: space-between;
+}
+
+.space-around {
+  justify-content: space-around;
 }
 
 .space-evenly {
