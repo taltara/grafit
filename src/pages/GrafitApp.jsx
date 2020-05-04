@@ -88,7 +88,7 @@ export class GrafitApp extends React.Component {
                 legendOffset: -40,
                 legendPosition: 'middle'
             }}
-            colors={{ scheme: 'set3' }}
+            colors={{ scheme: (this.state.theme === 'dark') ? 'set3' : 'category10' }}
             pointSize={10}
 
             pointColor={{ from: 'color', modifiers: [] }}
