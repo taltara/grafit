@@ -3,7 +3,7 @@ import React from 'react';
 import { Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 
-import { Switch, Fab, Grid, SvgIcon } from '@material-ui/core';
+import { Switch, Grid } from '@material-ui/core';
 
 import { ReactComponent as IconSharp } from '../assets/img/sharp.svg';
 import { ReactComponent as IconWave } from '../assets/img/wave.svg';

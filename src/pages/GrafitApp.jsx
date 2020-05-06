@@ -100,13 +100,13 @@ export class GrafitApp extends React.Component {
 
             // 
             tooltip={(episode) => {
-                console.log(episode);
+                // console.log(episode);
                 return (
                     <div
                         style={{
                             background: (theme === 'dark') ? 'rgba(255, 255, 255, 0.9)' : 'rgba(32,33,36, 0.95)',
                             color: (theme === 'dark') ? 'black' : 'rgba(255, 255, 255, 1)',
-                            padding: '9px 12px',
+                            padding: '4.5px 12px',
                             border: '1px solid #ccc',
                             borderRadius: '3px',
                             fontFamily: 'Consolas',
@@ -147,9 +147,7 @@ export class GrafitApp extends React.Component {
                     {
                         anchor: 'right',
                         direction: 'column',
-                        // theme: { textColor: (theme === 'dark') ? 'rgba(255, 255, 255, 0.9)' : 'black' },
-                        // textColor: (theme === 'dark') ? 'rgba(255, 255, 255, 0.9)' : 'black',
-                        color: (theme === 'dark') ? 'rgba(255, 255, 255, 0.9)' : 'black',
+                        itemTextColor: (theme === 'dark') ? 'rgba(255, 255, 255, 0.9)' : 'black',
                         justify: false,
                         translateX: 100,
                         translateY: 0,
@@ -223,22 +221,6 @@ export class GrafitApp extends React.Component {
 
     onViewChange = (current) => {
 
-        // let nextGrafView;
-        // switch (current) {
-        //     case 'linear':
-        //         nextGrafView = 'cardinal';
-        //         break;
-        //     case 'cardinal':
-        //         nextGrafView = 'monotoneY';
-        //         break;
-        //     case 'monotoneY':
-        //         nextGrafView = 'step';
-        //         break;
-        //     default:
-        //         nextGrafView = 'linear';
-        //         break;
-
-        // }
         this.setState({ grafView: current })
     }
 

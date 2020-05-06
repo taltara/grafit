@@ -1,6 +1,6 @@
 import React from 'react';
 import grafService from '../services/grafService';
-import { TextField, Button, Select, MenuItem, FormControl, InputLabel, Switch, } from '@material-ui/core';
+import { TextField, Button, Select, MenuItem, FormControl, InputLabel, } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SearchIcon from '@material-ui/icons/Search';
 
