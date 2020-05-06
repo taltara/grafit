@@ -88,14 +88,29 @@ body {
 
 }
 
+.view-selection {
+  width: fit-content;
+  height: 3rem;
+  margin: 0;
+}
+
 .darkmode-switch {
   /* position: absolute;
   right: 1rem;
   top: 0.25rem; */
 }
 
+.view-selection .MuiToggleButton-label {
+  width: 2rem;
+  height: 3rem;
+}
+
 .MuiFab-label {
   min-width: 6rem;
+}
+
+#view-selector  {
+  flex-basis: unset;
 }
 
 /* BASICS */

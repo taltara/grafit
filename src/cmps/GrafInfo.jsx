@@ -2,8 +2,16 @@ import React from 'react';
 
 import { Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import Switch from '@material-ui/core/Switch';
-import Fab from '@material-ui/core/Fab';
+
+import { Switch, Fab, Grid, SvgIcon } from '@material-ui/core';
+
+import { ReactComponent as IconSharp } from '../assets/img/sharp.svg';
+import { ReactComponent as IconWave } from '../assets/img/wave.svg';
+import { ReactComponent as IconCurve } from '../assets/img/curve.svg';
+import { ReactComponent as IconSquare } from '../assets/img/square.svg';
+
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 export class GrafInfo extends React.Component {
 
@@ -18,7 +26,12 @@ export class GrafInfo extends React.Component {
     componentDidUpdate() {
 
     }
-    
+
+    handleAlignment = (value) => {
+        console.log(value);
+        this.props.onViewChange(value);
+    }
+
 
     render() {
         const { error, snackbar, name, theme, toggleDark, episodeCount, grafView } = this.props;
@@ -34,7 +47,32 @@ export class GrafInfo extends React.Component {
                 ><Alert severity={(!error) ? `success` : 'error'}>
                         {(!error) ? `Success! Showing: '${name}'` : 'Sorry, please refine your search'}</Alert></Snackbar>
                 <header className="info-header flex align-center space-around">
-                    <Fab variant="extended" onClick={() => {this.props.onViewChange()}}>{grafView}</Fab>
+                    {/* <Fab variant="extended" onClick={() => {this.props.onViewChange()}}>{grafView}</Fab> */}
+
+                    <Grid item sm={12} md={6} id='view-selector'>
+                        <div className={`view-selection`}>
+                            <ToggleButtonGroup
+                                value={grafView}
+                                exclusive
+                                // onChange={this.handleAlignment}
+                                aria-label="text alignment"
+                            >
+                                <ToggleButton value="linear" aria-label="left aligned">
+                                    <IconSharp value="linear" onClick={() => {this.handleAlignment('linear')} }/>
+                                </ToggleButton>
+                                <ToggleButton value="cardinal" aria-label="centered">
+                                    <IconWave onClick={() => {this.handleAlignment('cardinal')} }/>
+                                </ToggleButton>
+                                <ToggleButton value="monotoneY" aria-label="right aligned">
+                                    <IconCurve onClick={() => {this.handleAlignment('monotoneY')} }/>
+                                </ToggleButton>
+                                <ToggleButton value="step" aria-label="justified">
+                                    <IconSquare onClick={() => {this.handleAlignment('step')} } />
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        </div>
+                    </Grid>
+
                     <title className={`graf-title flex space-center ${(theme === 'dark') ? 'light' : 'dark'}`}>
                         <p className={'graf-name'}>
                             {(name !== '') ? `'${name}'` : ''}</p>
@@ -47,7 +85,7 @@ export class GrafInfo extends React.Component {
                             // defaultChecked
                             onChange={toggleDark}
                             name="theme"
-                            color="black"
+                            color="default"
                             inputProps={{ 'aria-label': 'primary checkbox' }}
                         />
                     </div>

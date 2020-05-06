@@ -97,46 +97,88 @@ export class GrafitApp extends React.Component {
             pointBorderWidth={2}
             pointBorderColor={{ from: 'serieColor' }}
 
+
+            // 
+            tooltip={(episode) => {
+                console.log(episode);
+                return (
+                    <div
+                        style={{
+                            background: (theme === 'dark') ? 'rgba(255, 255, 255, 0.9)' : 'rgba(32,33,36, 0.95)',
+                            color: (theme === 'dark') ? 'black' : 'rgba(255, 255, 255, 1)',
+                            padding: '9px 12px',
+                            border: '1px solid #ccc',
+                            borderRadius: '3px',
+                            fontFamily: 'Consolas',
+                            fontSize: '1rem'
+                        }}
+                    >
+                        <span className="flex align-center space-center"><div className="tooltip-season" style={{
+                            color: episode.point.serieColor,
+                            padding: '3px 0',
+                            fontWeight: 'bold'
+                        }}>{episode.point.serieId + ' '}:</div>
+                            <div className="tooltip-episode" style={{
+                                padding: '3px 0',
+                                fontWeight: 'bold'
+                            }}>:{' ' + episode.point.data.xFormatted}</div></span>
+
+                        <div className="tooltip-rating" style={{
+                            color: episode.point.serieColor,
+                            textAlign: 'center',
+                            fontSize: '1.25rem',
+                            padding: '3px 0',
+                            fontWeight: 'bolder'
+                        }}>{episode.point.data.yFormatted}</div>
+
+                    </div>
+                )
+            }}
+            // 
+
             pointLabel="y"
-            pointLabelYOffset={-12}
+            pointLabelYOffset={- 12
+            }
             useMesh={true}
             crosshairType='cross'
             layers={['grid', 'axes', 'areas', 'crosshair', 'lines', 'points', 'slices', 'mesh', 'legends', 'markers']}
-            legends={[
-                {
-                    anchor: 'right',
-                    direction: 'column',
-                    // theme: { textColor: (theme === 'dark') ? 'rgba(255, 255, 255, 0.9)' : 'black' },
-                    // textColor: (theme === 'dark') ? 'rgba(255, 255, 255, 0.9)' : 'black',
-                    color: (theme === 'dark') ? 'rgba(255, 255, 255, 0.9)' : 'black',
-                    justify: false,
-                    translateX: 100,
-                    translateY: 0,
-                    itemsSpacing: 0,
-                    itemDirection: 'left-to-right',
-                    itemWidth: 80,
-                    itemHeight: 20,
-                    itemOpacity: 0.75,
-                    symbolSize: 15,
-                    symbolShape: 'circle',
-                    symbolBorderColor: 'rgba(0, 0, 0, .5)',
-                    effects: [
-                        {
-                            on: 'hover',
-                            style: {
-                                itemBackground: 'rgba(0, 0, 0, .03)',
-                                itemOpacity: 1,
+            legends={
+                [
+                    {
+                        anchor: 'right',
+                        direction: 'column',
+                        // theme: { textColor: (theme === 'dark') ? 'rgba(255, 255, 255, 0.9)' : 'black' },
+                        // textColor: (theme === 'dark') ? 'rgba(255, 255, 255, 0.9)' : 'black',
+                        color: (theme === 'dark') ? 'rgba(255, 255, 255, 0.9)' : 'black',
+                        justify: false,
+                        translateX: 100,
+                        translateY: 0,
+                        itemsSpacing: 0,
+                        itemDirection: 'left-to-right',
+                        itemWidth: 80,
+                        itemHeight: 20,
+                        itemOpacity: 0.75,
+                        symbolSize: 15,
+                        symbolShape: 'circle',
+                        symbolBorderColor: 'rgba(0, 0, 0, .5)',
+                        effects: [
+                            {
+                                on: 'hover',
+                                style: {
+                                    itemBackground: 'rgba(0, 0, 0, .03)',
+                                    itemOpacity: 1,
+                                }
                             }
-                        }
-                    ]
-                }
-            ]}
+                        ]
+                    }
+                ]}
         />
         )
     };
 
     onDatachange = (newData) => {
         if (!newData) {
+            console.log(newData);
             this.setState({ error: true }, () => {
                 this.handleSnackbar();
             });
@@ -179,25 +221,25 @@ export class GrafitApp extends React.Component {
         this.setState({ [property]: value }, console.log(this.state));
     }
 
-    onViewChange = () => {
+    onViewChange = (current) => {
 
-        let nextGrafView;
-        switch (this.state.grafView) {
-            case 'linear':
-                nextGrafView = 'cardinal';
-                break;
-            case 'cardinal':
-                nextGrafView = 'monotoneY';
-                break;
-            case 'monotoneY':
-                nextGrafView = 'step';
-                break;
-            default:
-                nextGrafView = 'linear';
-                break;
+        // let nextGrafView;
+        // switch (current) {
+        //     case 'linear':
+        //         nextGrafView = 'cardinal';
+        //         break;
+        //     case 'cardinal':
+        //         nextGrafView = 'monotoneY';
+        //         break;
+        //     case 'monotoneY':
+        //         nextGrafView = 'step';
+        //         break;
+        //     default:
+        //         nextGrafView = 'linear';
+        //         break;
 
-        }
-        this.setState({ grafView: nextGrafView })
+        // }
+        this.setState({ grafView: current })
     }
 
     render() {
