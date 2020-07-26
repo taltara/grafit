@@ -1,41 +1,33 @@
-import React from 'react';
-import grafService from '../services/grafService';
+import React, { useRef, useState, useEffect } from 'react';
+import grafService from '../../services/grafService';
 import { TextField, Button, Select, MenuItem, FormControl, InputLabel, } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SearchIcon from '@material-ui/icons/Search';
 
-export class GrafFilter extends React.Component {
+const GrafFilter = (props) => {
 
-    constructor() {
-        super();
-        this.elSearch = React.createRef;
-        this.elType = React.createRef;
-    }
+    const elSearch = useRef(null);
+    const elType = useRef(null);
 
-    state = {
-        searching: false,
-        current: 'Default',
-        type: 'series'
-    };
+    const [searching, setIsSearching] = useState(false);
+    const [current, setCurrent] = useState('Default');
+    const [type, setType] = useState('series');
 
-    componentDidMount() {
 
-    }
-    componentDidUpdate() {
-        if (this.props.name !== this.state.current) {
-            this.setState({ searching: false, current: this.props.name })
+    useEffect(() => {
+        if (props.name !== current) {
+            setIsSearching(false);
+            setCurrent(props.name);
         }
-    }
+    }, [props.name, current])
 
-    onSearch = (event) => {
+    const onSearch = (event) => {
         event.preventDefault();
-        if (this.state.searching) return;
-        this.setState({ searching: true });
+        if (searching) return;
+        setIsSearching(true);
 
         let type = event.target.type.value;
-        // event.target.type.value = '';
         let searchString = event.target.search.value;
-        // event.target.search.value = '';
 
         let searchObj = {
             type,
@@ -48,51 +40,48 @@ export class GrafFilter extends React.Component {
             .then(res => {
 
                 console.log(data);
-                if(!data.length) {
+                if(!data.values.length) {
                     data = null;
-                    this.setState({ searching: false });
+                    setIsSearching(false);
                 }
 
-                if(data[0].Title !== this.state.current) {
+                if(data.values[0].Title !== current) {
                     console.log('NOT SAME');
-                    this.props.onDatachange(data);
+                    props.onDataChange(data);
                 } else  {
                     console.log('SAME');
-                    this.setState({ searching: false });
+                    setIsSearching(false);
                 }
             })
     }
 
-    handleChange = ({ target }) => {
+    const handleTypeChange = ({ target }) => {
         console.log(target);
-        let property = target.name;
         let value = target.value;
 
-        this.setState({ [property]: value }, console.log(this.state));
+        setType(value)
     }
 
-    render() {
-        const { searching, type } = this.state;
         return (
             <section className="graf-filter flex align-center space-around">
-                <form onSubmit={this.onSearch} className="flex align-center space-around">
+                <form onSubmit={onSearch} className="flex align-center space-around">
                     <FormControl>
                         <InputLabel id="select-type">Media</InputLabel>
                         <Select
                             name="type"
-                            ref={this.elType}
+                            ref={elType}
                             autoWidth
                             required
                             labelId="select-type"
                             value={type}
-                            onChange={this.handleChange}
+                            onChange={handleTypeChange}
                         >
                             <MenuItem value="movie">Movie</MenuItem>
                             <MenuItem value="series">TV Show</MenuItem>
                         </Select>
                     </FormControl>
 
-                    <TextField id="standard-basic" label="Search" variant="standard" name="search" ref={this.elSearch} required />
+                    <TextField id="standard-basic" label="Search" variant="standard" name="search" ref={elSearch} required />
                     {(searching) ?
                         <CircularProgress /> :
                         <Button
@@ -107,6 +96,7 @@ export class GrafFilter extends React.Component {
                 </form>
             </section>
         );
-    }
+    
 };
 
+export default GrafFilter;

@@ -1,0 +1,26 @@
+.tilt-button {
+    border-bottom: 2px solid transparent;
+    transition: 0.15s ease-in-out;
+    border-radius: 2px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding: 3px 5px;
+    
+    &:hover {
+
+      &.button-light {
+        color: black;
+        background-color: rgba(247, 247, 247, 0.75);
+      }
+
+      &.button-dark {
+        color: white;
+        background-color: darken($color: #f7f7f7, $amount: 30%);
+      }
+    }
+
+    &.activeTab {
+      border-bottom: 2px solid rgba(245, 197, 24, 1);
+    }
+
+  }

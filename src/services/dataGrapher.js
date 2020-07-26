@@ -1,75 +1,95 @@
 
 
-export default {
-    fitShowtoGraf,
-}
+const fitShowtoGraf = (data) => {
+  console.log(data);
+  var dataAll = { dataSet: [] };
 
+  let count = 1;
+  var average = 0;
+  var accumulator = 0;
+  var validSeasons = 0;
 
+  //== Per season flow
+  data.forEach((season, index) => {
+    if (season.Episodes[0].Released !== "N/A") {
+      average = 0;
 
-function fitShowtoGraf(data) {
+      if (!season.Error) {
+        validSeasons += 1;
+        if (!index) dataAll.name = season.Title;
 
-    console.log(data);
-    var dataAll = { dataSet: [] }
-    // let id = data[0].title;
-    let count = 1;
-    var average = 0;
-    var accumulator = 0;
-    var validSeasons = 0;
+        var dataObj = {
+          id: `Season ${index + 1}`,
+          data: [],
+        };
 
-    //== Per season flow
-    data.forEach((season, i) => {
-
-        average = 0;
-
-        if (!season.Error) {
-            validSeasons += 1;
-            if (!i) dataAll.name = season.Title;
-
-            var dataObj = {
-                id: `Season ${i + 1}`,
-                data: []
-            }
-
-            season.Episodes.forEach((episode, j) => {
-
-                let epNum = (j + 1);
-                average += +episode.imdbRating;
-
-                dataObj.data.push({
-                    x: epNum,
-                    y: +episode.imdbRating
-                });
-                
-                if(season.Episodes.length === j + 1) {
-                    accumulator += (average / season.Episodes.length);
-                }
-
-                count++;
+        season.Episodes.forEach((episode, j) => {
+          if (
+            episode.Released !== "N/A" &&
+            episode.imdbRating !== "N/A" &&
+            +episode.imdbRating >= 0
+          ) {
+            let epNum = j + 1;
+            average += +episode.imdbRating;
+            dataObj.data.push({
+              x: epNum,
+              y: +episode.imdbRating,
+              episodeName: episode.Title,
             });
 
-            // dataObj.data.unshift(seasonAvg);
+            if (season.Episodes.length === j + 1) {
+              accumulator += average / season.Episodes.length;
+            }
 
-            dataAll.dataSet.push(dataObj);
-            // dataObj.data.push(seasonAvg);
+            count++;
+          }
+        });
 
-        }
-    });
-    accumulator /= validSeasons;
-    //== Single line flow
-    // data.forEach((season, i) => {
-    //     seasonSize = season.
-    //     season.Episodes.forEach((episode, j) => {
-    //         if(!i && !j) count = episode.Episode;
+        dataAll.dataSet.push(dataObj);
+      }
+    }
+  });
+  accumulator /= validSeasons;
 
-    //         dataObj.data.push({
-    //             x: count++,
-    //             y: episode.imdbRating
-    //         });
-    //     });
-    // });
-
-    // dataSet.push(dataObj);
-    dataAll.average = accumulator;
-    dataAll.episodeCount = count - 1;
-    return Promise.resolve(dataAll);
+  dataAll.average = accumulator;
+  dataAll.episodeCount = count - 1;
+  return Promise.resolve(dataAll);
 }
+
+const fitMovieData = (data) => {
+
+  console.log(data);
+  console.log(data.Actors.split(", "));
+  return Promise.resolve({
+    actors: data.Actors.split(", "),
+    awards: data.Awards,
+    // boxOffice: +data.BoxOffice.slice(1).replace(/,/gi, ""),
+    boxOffice: data.BoxOffice,
+    country: data.Country,
+    dvd: data.DVD,
+    director: data.Director,
+    genre: data.Genre.split(", "),
+    language: data.Language.split(", "),
+    plot: data.Plot,
+    poster: data.Poster,
+    production: data.Production,
+    rated: data.Rated,
+    ratings: [ ...data.Ratings ],
+    released: data.Released,
+    length: data.Runtime,
+    name: data.Title,
+    website: data.website ? data.website : null,
+    writer: data.Writer.split(", "),
+    year: data.Year,
+    imdbVotes: data.imdbVotes,
+    imdbRating: data.imdbRating,
+    color: data.color
+  })
+}
+
+
+
+export default {
+  fitShowtoGraf,
+  fitMovieData,
+};

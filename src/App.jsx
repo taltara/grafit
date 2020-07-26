@@ -1,36 +1,92 @@
-import React from 'react';
-import './App.css';
-import { GrafitApp } from './pages/GrafitApp.jsx';
-import { SideMenu } from './cmps/SideMenu.jsx';
-import { Home } from './pages/Home.jsx';
+import React, { useState, useEffect } from "react";
 
-
+import "./style/global.scss";
+import GrafitApp from "./pages/GrafitApp.jsx";
+import MenuToolbar from "./cmps/navigation/MenuToolbar.jsx";
+import Home from "./pages/Home.jsx";
+import { connect } from "react-redux";
+import { switchTab } from "./store/actions/MenuActions";
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-} from "react-router-dom";
+  toggleTheme,
+  changeGrafView,
+  setData,
+} from "./store/actions/GrafActions";
 
-export class App extends React.Component {
+import { Switch, Route } from "react-router-dom";
 
-    state = {
-        theme: 'dark',
+const App = (props) => {
+  const { theme, data, setData, switchTab, activeTab } = props;
+  const [grafView, setGrafView] = useState("linear");
+  const [currTheme, setCurrTheme] = useState("light");
+
+  const onToggleTheme = () => {
+    let newTheme = theme === "dark" ? "light" : "dark";
+
+    setCurrTheme(newTheme);
+    props.toggleTheme(newTheme);
+  };
+
+  const onSetGrafView = (value) => {
+    setGrafView(value);
+    props.changeGrafView(value);
+  };
+
+  useEffect(() => {
+    let currentTab = window.location.pathname;
+    console.log(currentTab);
+    let ActiveTab;
+
+    switch (currentTab) {
+      case "/":
+        ActiveTab = "home";
+        break;
+      case "/graf":
+        ActiveTab = "graf";
+        break;
+      default:
+        ActiveTab = "home";
+        break;
     }
+    switchTab(ActiveTab);
+  }, [switchTab]);
 
+  return (
+    <main className="app-content">
+      <MenuToolbar
+        onSetGrafView={onSetGrafView}
+        grafView={grafView}
+        theme={currTheme}
+        onToggleTheme={onToggleTheme}
+        setData={setData}
+        switchTab={switchTab}
+        activeTab={activeTab}
+      />
 
-    render() {
-        return (
-            <Router>
-                <main className="app-content">
-                    <SideMenu />
-                    <Switch>
-                        <Route component={GrafitApp} path="/graf" />
-                        <Route component={Home} path="/" />
-                    </Switch>
-                </main>
-            </Router>
-        );
-    }
-}
+      <Switch>
+        <Route render={() => <GrafitApp data={data} />} path="/graf" />
+        <Route render={() => <Home theme={theme} />} path="/" />
+      </Switch>
+    </main>
+  );
+};
 
-export default App;
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    activeTab: state.menu.activeTab,
+    theme: state.graf.theme,
+    grafView: state.graf.grafView,
+    data: state.graf.data,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    switchTab: (activeTab) => dispatch(switchTab(activeTab)),
+    toggleTheme: (theme) => dispatch(toggleTheme(theme)),
+    changeGrafView: (grafView) => dispatch(changeGrafView(grafView)),
+    setData: (data) => dispatch(setData(data)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

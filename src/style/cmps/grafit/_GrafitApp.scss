@@ -1,0 +1,169 @@
+.app-content {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main-graf {
+  height: 100%;
+}
+
+.info-header {
+  width: 100%;
+  align-items: baseline;
+  overflow: hidden;
+  padding-top: 10px;
+}
+
+.graf-title {
+  font-size: 24px;
+  font-family: animosaExtraLight;
+  font-weight: 700;
+  min-width: 350px;
+  width: 90%;
+  align-items: baseline;
+  width: fit-content;
+  cursor: pointer;
+
+  .graf-title-content {
+    z-index: 1;
+    transition: all 0.5s ease-in-out;
+    padding: 5px;
+    width: 100%;
+    border-radius: 2px;
+    flex-wrap: wrap;
+    .graf-title-info {
+      font-family: animosaExtraLight;
+      font-weight: 100;
+      padding: 3px 11px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      border-radius: 50%;
+      transition: 0.5s cubic-bezier(0.3, 0.45, 0.05, 1.03);
+      transform: rotate(0deg);
+
+      &.title-hover {
+        transform: rotate(360deg);
+        // font-family: animosaExtraBold;
+        font-weight: 500;
+        border-color: transparent;
+        background-color: rgba(34, 139, 34, 0.5);
+      }
+
+      &.info-light {
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+
+    }
+
+    &:hover {
+      transition: all 0.25s ease-in-out;
+      background-color: darken($color: rgba(247, 247, 247, 0.25), $amount: 10%);
+    }
+
+    &.title-blink {
+      animation: blink normal 1s 0s 1 ease-in-out;
+    }
+
+  }
+
+  .glowing-title-border {
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+
+    // background-color: rgba(34, 139, 34, 0.5);
+    // box-shadow: 0px 0px 5px 7px rgba(34, 139, 34, 0.5);
+    
+  }
+}
+
+
+.graf-title-content > *:not(:last-of-type) {
+  margin-right: 15px;
+}
+
+.graf-name {
+  letter-spacing: 1px;
+  font-size: 35px;
+}
+
+.episode-count {
+  font-size: 0.75rem;
+}
+
+.dark-bgc {
+  background-color: black;
+}
+
+.light-bgc {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.light {
+  color: white;
+}
+
+.dark {
+  color: rgba(21, 21, 21, 1);
+}
+
+.graf {
+  position: relative;
+}
+
+.graf-app {
+  height: 100%;
+  grid-template-rows: 74px 1fr;
+  // padding-left: 4.35rem;
+}
+
+.graf-filter {
+  height: 100%;
+  width: 100%;
+}
+
+.graf-filter form {
+  min-height: 4rem;
+}
+
+.graf-filter form {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(152, 251, 152, 1);
+}
+
+.info-header .MuiFab-extended {
+  height: 40px;
+  padding: 0 8px;
+}
+
+
+
+.movie-info {
+
+  .movie-compare-block {
+    width: 95%;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 0 10px 10px;
+    border-radius: 2.5px;
+    .movie-compare-line {
+      width: 100%;
+      height: 65px;
+      min-width: 400px;
+      margin-right: 10px;
+      
+      padding-right: 10px;
+      // border-right: 1px dashed rgba(0, 0, 0, 0.5);
+    }
+
+    .switcher-movie-line {
+      align-self: center;
+      box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.25);
+      transition: 0.2s ease-in-out;
+      margin-top: 10px;
+      &:hover {
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0);
+      }
+    }
+
+  }
+}

@@ -1,0 +1,41 @@
+.home-main {
+  font-size: 2.5rem;
+  .home-content {
+    min-width: 750px;
+    width: 75%;
+    text-align: center;
+    margin: auto;
+
+    & p {
+      &:not(:last-of-type) {
+        margin-bottom: 2rem;
+      }
+      &:first-of-type {
+        margin-bottom: 3rem;
+      }
+    }
+
+    .home-header {
+      font-family: animosaExtraBold;
+      font-size: 5rem;
+    }
+
+    .home-images {
+      width: 30%;
+      margin-bottom: 1rem;
+
+      .type-icon {
+        width: 3rem;
+      }
+    }
+  }
+
+  &.main-light {
+    background-color: white;
+    color: black;
+  }
+  &.main-dark {
+    background-color: black;
+    color: rgba(255, 255, 255, 0.85);
+  }
+}

@@ -1,0 +1,98 @@
+.graf-description {
+  width: 50%;
+  min-width: 400px;
+  position: fixed;
+  right: 0;
+  top: 61px;
+  flex-direction: column;
+  padding: 16px;
+  background-color: rgba(32, 33, 36, 0.95);
+  transition: cubic-bezier(0.42, 0.5, 0.25, 1) 0.5s;
+  transform: translateX(100%);
+  z-index: 2;
+  height: 90vh;
+  overflow-y: auto;
+
+  .secondary {
+    margin-right: 3px;
+  }
+}
+
+.description-return-container {
+
+  .description-return {
+    width: 30px;
+    height: 30px;
+    transition: 0.35s cubic-bezier(0.42, 0.5, 0.25, 1);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transform: rotate(0deg);
+    // stroke: black;
+    background-color: #f7f7f7;
+    fill: rgba(0, 0, 0, 0.75);
+    &:hover {
+      background-color: rgba(255, 99, 71, 1);
+      fill: rgba(0, 0, 0, 1);
+    }
+  
+    // &.return-light {
+    //   fill: white;
+    // }
+    
+    // &.return-dark {
+    //   fill: black;
+    // }
+  
+    &.open-arrow {
+      transform: rotate(180deg);
+    }
+    &.arrow-opened {
+      transition: 0.25s cubic-bezier(0.42, 0.5, 0.25, 1);
+    }
+  }
+}
+
+
+.graf-description > *:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.show-description {
+  transform: translateX(0);
+}
+
+.light-descripion {
+  background-color: rgba(255, 255, 255, 0.95);
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.darker-descripion {
+  background-color: rgba(32, 33, 36, 0.99);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.show-header {
+  font-size: 48px;
+  margin-right: 10px;
+}
+
+.graf-description .show-poster {
+  margin-bottom: 25px;
+  transition: 0.2s ease-in-out;
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.title-span {
+  border-bottom: 2px dashed;
+}
+
+.rating-source {
+  margin-right: 4px;
+}
+
+.seperator {
+  margin: 0 4px;
+}

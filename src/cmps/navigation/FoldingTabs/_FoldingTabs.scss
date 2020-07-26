@@ -1,0 +1,12 @@
+.tabs-list{
+    font-size: 24px;
+    font-family: animosaExtraLight;
+    height: fit-content;
+    width: 130px;
+    
+    .tilt-button {
+        &.activeTab {
+          border-bottom: 2px solid rgba(245, 197, 24, 1);;
+        }
+      }
+}

@@ -1,248 +1,191 @@
-import React from 'react';
-import { data } from "../data";
-import dataGrapher from '../services/dataGrapher';
-import { ResponsiveLine } from "@nivo/line";
-import { GrafFilter } from '../cmps/GrafFilter.jsx';
-import { GrafInfo } from '../cmps/GrafInfo.jsx';
+import React, { useState, useEffect } from "react";
 
-// import { Snackbar } from '@material-ui/core';
-// import { Alert } from '@material-ui/lab';
-// import Switch from '@material-ui/core/Switch';
+import { defData } from "../data";
+import { switchTab } from "../store/actions/MenuActions";
+import dataGrapher from "../services/dataGrapher";
+import GrafInfo from "../cmps/grafit/GrafitInfo/GrafInfo";
+import GrafDescription from "../cmps/grafit/GrafDescription";
+import GrafSeriesLine from "../cmps/grafit/GrafitSeriesLine";
+import GrafMovieInfo from "../cmps/grafit/GrafMovieInfo";
+import { connect } from "react-redux";
 
-export class GrafitApp extends React.Component {
+const GrafitApp = (props) => {
+  const { grafView, theme, data, activeTab, switchTab } = props;
 
+  const [grafSeriesData, setGrafSeriesData] = useState(defData);
+  const [grafMovieData, setGrafMovieData] = useState(null);
+  const [name, setName] = useState("The Office");
+  const [showInfo, setShowInfo] = useState({});
+  const [snackbar, setSnackbar] = useState(false);
+  const [isDataNew, SetIsDataNew] = useState(false);
+  const [average, setAverage] = useState(null);
+  const [error, setIsError] = useState(false);
+  const [dataType, setDataType] = useState("series");
 
-    state = {
-        data: data,
-        name: 'Default',
-        snackbar: false,
-        theme: 'dark',
-        average: null,
-        error: false,
-        grafView: 'linear'
+  const [showDescription, setShowDescription] = useState(false);
+  const [dynamicHeight, setDynamicHeight] = useState({
+    height: window.innerHeight - 128,
+    width: window.innerWidth - 10,
+  });
+
+  useEffect(() => {
+    // console.log(activeTab);
+    let currentTab = window.location.pathname;
+    console.log(currentTab);
+    let ActiveTab;
+
+    switch (currentTab) {
+      case "/":
+        ActiveTab = "home";
+        break;
+      case "/graf":
+        ActiveTab = "graf";
+        break;
+      default:
+        ActiveTab = "home";
+        break;
     }
+    switchTab(ActiveTab);
+    window.addEventListener("resize", () => {
+      updateDimensions();
+    });
+    return window.removeEventListener("resize", () => {
+      updateDimensions();
+    });
+  }, []);
 
-    componentDidMount() {
+  useEffect(() => {
+    console.log(data);
+    onDataChange(data);
+    SetIsDataNew(true);
+    setTimeout(() => {
+      SetIsDataNew(false);
+    }, 1000);
+  }, [data]);
 
-    }
-
-
-    graph = (data, average) => {
-
-        const { theme, grafView } = this.state;
-
-        const lineGraphSettings = {
-            theme: {
-                fontSize: 14,
-                textColor: (theme === 'dark') ? 'rgba(255, 255, 255, 0.9)' : 'black',
-            },
-        };
-
-        return (<ResponsiveLine
-            data={data}
-            margin={{ top: 50, right: 110, bottom: 60, left: 50 }}
-            xScale={{ type: 'point' }}
-            yScale={{ type: 'linear', min: 'auto', max: 10, stacked: false, reverse: false }}
-            curve={grafView}
-            // enableArea={true}
-            // areaOpacity={0.1}
-            // areaBlendMode='difference'
-            motionStiffness={150}
-            motionDamping={30}
-            enableGridX={false}
-            lineWidth={3}
-            axisTop={null}
-            theme={lineGraphSettings.theme}
-            axisRight={null}
-            markers={(average) ? [
-                {
-                    axis: 'y',
-                    value: average,
-                    lineStyle: {
-                        stroke: (theme === 'dark') ? 'rgba(255, 255, 255, 1)' : 'black',
-                        strokeWidth: 3
-                    },
-                    textStyle: {
-                        fill: (theme === 'dark') ? 'rgba(255, 255, 255, 1)' : 'black',
-                        fontWeight: 'bold',
-                        fontSize: 16,
-                        pointerEvents: 'none'
-                    },
-                    legend: `Average [${average.toFixed(2)}]`,
-
-                }
-            ] : null}
-            axisBottom={{
-                orient: 'bottom',
-                tickSize: 5,
-                tickPadding: 5,
-                tickRotation: 0,
-                legend: `Episodes`,
-                legendOffset: 36,
-                legendPosition: 'middle'
-            }}
-            axisLeft={{
-                orient: 'left',
-                tickSize: 5,
-                tickPadding: 5,
-                tickRotation: 0,
-                legend: 'Rating',
-                legendOffset: -40,
-                legendPosition: 'middle'
-            }}
-            colors={{ scheme: (this.state.theme === 'dark') ? 'set3' : 'category10' }}
-            pointSize={10}
-
-            pointColor={{ from: 'color', modifiers: [] }}
-            pointBorderWidth={2}
-            pointBorderColor={{ from: 'serieColor' }}
-
-
-            // 
-            tooltip={(episode) => {
-                // console.log(episode);
-                return (
-                    <div
-                        style={{
-                            background: (theme === 'dark') ? 'rgba(255, 255, 255, 0.9)' : 'rgba(32,33,36, 0.95)',
-                            color: (theme === 'dark') ? 'black' : 'rgba(255, 255, 255, 1)',
-                            padding: '4.5px 12px',
-                            border: '1px solid #ccc',
-                            borderRadius: '3px',
-                            fontFamily: 'Consolas',
-                            fontSize: '1rem'
-                        }}
-                    >
-                        <span className="flex align-center space-center"><div className="tooltip-season" style={{
-                            color: episode.point.serieColor,
-                            padding: '3px 0',
-                            fontWeight: 'bold'
-                        }}>{episode.point.serieId + ' '}:</div>
-                            <div className="tooltip-episode" style={{
-                                padding: '3px 0',
-                                fontWeight: 'bold'
-                            }}>:{' ' + episode.point.data.xFormatted}</div></span>
-
-                        <div className="tooltip-rating" style={{
-                            color: episode.point.serieColor,
-                            textAlign: 'center',
-                            fontSize: '1.25rem',
-                            padding: '3px 0',
-                            fontWeight: 'bolder'
-                        }}>{episode.point.data.yFormatted}</div>
-
-                    </div>
-                )
-            }}
-            // 
-
-            pointLabel="y"
-            pointLabelYOffset={- 12
-            }
-            useMesh={true}
-            crosshairType='cross'
-            layers={['grid', 'axes', 'areas', 'crosshair', 'lines', 'points', 'slices', 'mesh', 'legends', 'markers']}
-            legends={
-                [
-                    {
-                        anchor: 'right',
-                        direction: 'column',
-                        itemTextColor: (theme === 'dark') ? 'rgba(255, 255, 255, 0.9)' : 'black',
-                        justify: false,
-                        translateX: 100,
-                        translateY: 0,
-                        itemsSpacing: 0,
-                        itemDirection: 'left-to-right',
-                        itemWidth: 80,
-                        itemHeight: 20,
-                        itemOpacity: 0.75,
-                        symbolSize: 15,
-                        symbolShape: 'circle',
-                        symbolBorderColor: 'rgba(0, 0, 0, .5)',
-                        effects: [
-                            {
-                                on: 'hover',
-                                style: {
-                                    itemBackground: 'rgba(0, 0, 0, .03)',
-                                    itemOpacity: 1,
-                                }
-                            }
-                        ]
-                    }
-                ]}
-        />
-        )
+  const updateDimensions = () => {
+    // console.log("CHNAGED!");
+    const dynamicHeight = {
+      height: window.innerHeight - 16 * 8,
+      width: window.innerWidth - 10,
     };
+    setDynamicHeight(dynamicHeight);
+  };
 
-    onDatachange = (newData) => {
-        if (!newData) {
-            console.log(newData);
-            this.setState({ error: true }, () => {
-                this.handleSnackbar();
-            });
-        } else {
+  const onDataChange = (newData) => {
+    // data is a movie
+    if (newData.Type === "movie") {
+      if (newData.Response === "False") {
+        setIsError({ error: true });
+        handleSnackbar();
+      } else {
+        setDataType("movie");
 
-
-            dataGrapher.fitShowtoGraf(newData)
-                .then(data => {
-                    console.log(data);
-                    this.setState({ data: data, name: data.name, average: data.average, error: false }, () => {
-                        this.handleSnackbar();
-                    });
-                })
-
-        }
-
-    }
-
-    handleSnackbar = () => {
-
-        this.setState(({ snackbar }) => ({ snackbar: !snackbar }), () => {
-
-            setTimeout(() => {
-                this.setState(({ snackbar }) => ({ snackbar: !snackbar }));
-            }, 3000);
+        dataGrapher.fitMovieData(newData).then((movieData) => {
+          setGrafMovieData(movieData);
+          setName(movieData.name);
+          setIsError(false);
+          handleSnackbar();
         });
+      }
+    } // data is a series
+    else {
+      if (!newData.values) {
+        if (!newData.starter) {
+          setIsError({ error: true });
+          handleSnackbar();
+        }
+      } else {
+        setDataType("series");
+        const seriesInfo = newData.seriesInfo;
+
+        dataGrapher.fitShowtoGraf(newData.values).then((dataForGraf) => {
+          console.log(dataForGraf);
+          setGrafSeriesData(dataForGraf);
+          setName(dataForGraf.name);
+          setAverage(dataForGraf.average);
+          setIsError(false);
+          setShowInfo(seriesInfo);
+          handleSnackbar();
+        });
+      }
     }
+  };
 
-    handleDarkModeChange = () => {
-        console.log('here');
-        let newMode = (this.state.theme === 'dark') ? 'light' : 'dark';
-        this.setState({ theme: newMode });
-    }
+  const handleSnackbar = () => {
+    setSnackbar((prevState) => {
+      return !prevState;
+    });
 
-    handleChange = ({ target }) => {
-        console.log(target);
-        let property = target.name;
-        let value = target.value;
+    setTimeout(() => {
+      setSnackbar((prevState) => {
+        return !prevState;
+      });
+    }, 3000);
+  };
 
-        this.setState({ [property]: value }, console.log(this.state));
-    }
+  const onViewDescription = () => {
+    setShowDescription((prevState) => {
+      return !prevState;
+    });
+  };
+  console.log(data);
+  return (
+    <main
+      className={`main-graf ${theme === "dark" ? "dark-bgc" : "light-bgc"}`}
+    >
+      <main className="graf-app grid">
+        <GrafInfo
+          error={error}
+          name={name}
+          theme={theme}
+          snackbar={snackbar}
+          //   toggleDark={handleDarkModeChange}
+          episodeCount={grafSeriesData.episodeCount}
+          isDataNew={isDataNew}
+          grafView={grafView}
+          toggleDescription={onViewDescription}
+          showDescription={showDescription}
+          dataType={dataType}
+        />
+        <section className="graf" style={{ ...dynamicHeight }}>
+          {dataType === "series" ? (
+            <>
+              <GrafSeriesLine
+                data={grafSeriesData.dataSet}
+                average={average}
+                theme={theme}
+                grafView={grafView}
+              />
+              <GrafDescription
+                show={showDescription}
+                theme={theme}
+                showInfo={showInfo}
+                onToggleDescription={onViewDescription}
+              />
+            </>
+          ) : (
+            <GrafMovieInfo data={grafMovieData} theme={theme} />
+          )}
+        </section>
+      </main>
+    </main>
+  );
+};
 
-    onViewChange = (current) => {
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    activeTab: state.menu.activeTab,
+    theme: state.graf.theme,
+    grafView: state.graf.grafView,
+  };
+};
 
-        this.setState({ grafView: current })
-    }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    switchTab: (activeTab) => dispatch(switchTab(activeTab)),
+  };
+};
 
-    render() {
-        // const [open, setOpen] = React.useState(false);
-
-        const { data, name, average, snackbar, theme, error, grafView } = this.state
-        return (
-            <main className={`main-graf ${(theme === 'dark') ? 'dark-bgc' : 'light-bgc'}`}>
-
-                <main className="graf-app grid">
-                    <GrafInfo error={error} name={name} theme={theme} snackbar={snackbar}
-                        toggleDark={this.handleDarkModeChange} episodeCount={data.episodeCount}
-                        onViewChange={this.onViewChange} grafView={grafView} />
-                    <section className="graf">
-                        {this.graph(data.dataSet, average)}
-                    </section>
-                    <footer className="filter-section">
-                        <GrafFilter onDatachange={this.onDatachange} name={name} />
-                    </footer>
-                </main>
-            </main>
-        )
-    }
-}
+export default connect(mapStateToProps, mapDispatchToProps)(GrafitApp);

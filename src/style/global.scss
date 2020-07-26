@@ -1,0 +1,22 @@
+// Setup
+@import "setup/variables.scss";
+@import "setup/functions.scss";
+@import "setup/typography.scss";
+
+// Basics
+@import "basics/helpers.scss";
+@import "basics/layout.scss";
+@import "basics/base.scss";
+@import "basics/links.scss";
+@import "basics/buttons.scss";
+@import "basics/animations.scss";
+
+// Components
+
+@import "cmps/home/Home.scss";
+@import "cmps/grafit/GrafitApp.scss";
+@import "cmps/grafit/Description.scss";
+@import "cmps/side_menu/SideMenu.scss";
+@import "cmps/navigation/MenuToolbar.scss";
+@import "../cmps/navigation/TiltButton/TiltButton";
+@import "../cmps/navigation/TypeSwitcher/TypeSwitcher";

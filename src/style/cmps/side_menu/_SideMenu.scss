@@ -1,0 +1,42 @@
+.side-menu {
+  width: 15rem;
+  position: fixed;
+  left: 0;
+  top: 0;
+  flex-direction: column;
+  padding: 0;
+  background-color: rgba(32, 33, 36, 0.5);
+  transition: cubic-bezier(0.42, 0.5, 0.25, 1) 0.4s;
+  transform: translateX(-71%);
+  z-index: 3;
+  height: 100%;
+}
+
+.app-content .show-menu {
+  transform: translateX(0);
+  background-color: rgba(32, 33, 36, 0.95);
+  -webkit-box-shadow: 10px 5px 15px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 10px 5px 15px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 10px 5px 15px 0px rgba(0, 0, 0, 0.75);
+}
+
+.label-span {
+  transition: ease-in-out 0.2s;
+  font-size: 2rem;
+  /* width: 100%; */
+  padding: 0 0.5rem 0 1rem;
+  border: inset 2px transparent;
+  cursor: pointer;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+.menu-logo {
+  width: 3.5rem;
+}
+
+.side-menu .active-navbar {
+  color: rgba(255, 255, 255, 1);
+  background-color: rgba(255, 255, 255, 0.25);
+  border: inset 2px rgba(255, 255, 255, 0.5);
+}
