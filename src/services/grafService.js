@@ -11,7 +11,7 @@ const getGrafData = (searchObj) => {
     let promises = [];
 
     return fetch(
-      `http://www.omdbapi.com/?apikey=7b9ab2e6&type=${type}&t=${search}`
+      `https://www.omdbapi.com/?apikey=7b9ab2e6&type=${type}&t=${search}`
     )
       .then((res) => res.json())
       .then(
@@ -20,7 +20,7 @@ const getGrafData = (searchObj) => {
           seriesInfo = result;
           for (let i = 0; i < result.totalSeasons; i++) {
             promises[i] = fetch(
-              `http://www.omdbapi.com/?apikey=7b9ab2e6&i=${id}&Season=${i + 1}`
+              `https://www.omdbapi.com/?apikey=7b9ab2e6&i=${id}&Season=${i + 1}`
             )
               .then((res) => res.json())
               .then(
@@ -45,7 +45,7 @@ const getGrafData = (searchObj) => {
       );
   } else {
     return fetch(
-      `http://www.omdbapi.com/?apikey=7b9ab2e6&type=${type}&s=${search}`
+      `https://www.omdbapi.com/?apikey=7b9ab2e6&type=${type}&s=${search}`
     )
       .then((res) => res.json())
       .then(
@@ -53,7 +53,7 @@ const getGrafData = (searchObj) => {
           console.log(result);
           if (result.Response === "True") {
             return fetch(
-              `http://www.omdbapi.com/?apikey=7b9ab2e6&i=${result.Search[0].imdbID}`
+              `https://www.omdbapi.com/?apikey=7b9ab2e6&i=${result.Search[0].imdbID}`
             )
               .then((result) => result.json())
               .then(
