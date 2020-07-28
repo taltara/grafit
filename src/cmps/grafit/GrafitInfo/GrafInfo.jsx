@@ -44,7 +44,7 @@ const GrafInfo = (props) => {
       <header className="info-header flex align-center space-around">
         <title
           onClick={() => {
-            if (episodeCount) toggleDescription();
+            if (dataType === "series") toggleDescription();
           }}
           className={`graf-title flex column align-center space-center ${grafTitleClass}`}
         >
