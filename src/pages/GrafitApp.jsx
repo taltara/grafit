@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { defData } from "../data";
+import { defData, info } from "../data";
 import { switchTab } from "../store/actions/MenuActions";
 import dataGrapher from "../services/dataGrapher";
 import GrafInfo from "../cmps/grafit/GrafitInfo/GrafInfo";
@@ -10,41 +10,51 @@ import GrafMovieInfo from "../cmps/grafit/GrafMovieInfo";
 import { connect } from "react-redux";
 
 const GrafitApp = (props) => {
-  const { grafView, theme, data, activeTab, switchTab } = props;
+  const {
+    grafView,
+    theme,
+    data,
+    activeTab,
+    switchTab,
+    setCurrSearchType,
+  } = props;
 
-  const [grafSeriesData, setGrafSeriesData] = useState(defData);
-  const [grafMovieData, setGrafMovieData] = useState(null);
-  const [name, setName] = useState("The Office");
-  const [showInfo, setShowInfo] = useState({});
+  // const [grafSeriesData, setGrafSeriesData] = useState(defData);
+  // const [grafMovieData, setGrafMovieData] = useState(null);
+  // const [name, setName] = useState("The Office");
+  // const [showInfo, setShowInfo] = useState(info);
   const [snackbar, setSnackbar] = useState(false);
-  const [isDataNew, SetIsDataNew] = useState(false);
-  const [average, setAverage] = useState(null);
-  const [error, setIsError] = useState(false);
-  const [dataType, setDataType] = useState("series");
+  // const [isDataNew, SetIsDataNew] = useState(false);
+  // const [average, setAverage] = useState(defData.average);
+  // const [error, setIsError] = useState(false);
+  // const [dataType, setDataType] = useState("series");
 
   const [showDescription, setShowDescription] = useState(false);
-  const [dynamicHeight, setDynamicHeight] = useState({
-    height: window.innerHeight - 128,
-    width: window.innerWidth - 10,
+  // const [dynamicHeight, setDynamicHeight] = useState({
+  //   height: window.innerHeight - 128,
+  //   width: window.innerWidth - 10,
+  // });
+
+  const [grafitAppState, setState] = useState({
+    grafSeriesData: defData,
+    grafMovieData: null,
+    name: "The Office",
+    showInfo: info,
+    snackbar: false,
+    isDataNew: false,
+    average: defData.average,
+    error: false,
+    dataType: "series",
+    dynamicHeight: {
+      height: window.innerHeight - 128,
+      width: window.innerWidth - 10,
+    },
   });
 
   useEffect(() => {
-    // console.log(activeTab);
     let currentTab = window.location.pathname;
-    console.log(currentTab);
     let ActiveTab;
-
-    switch (currentTab) {
-      case "/":
-        ActiveTab = "home";
-        break;
-      case "/graf":
-        ActiveTab = "graf";
-        break;
-      default:
-        ActiveTab = "home";
-        break;
-    }
+    ActiveTab = getActiveTabByPath(currentTab);
     switchTab(ActiveTab);
     window.addEventListener("resize", () => {
       updateDimensions();
@@ -55,13 +65,30 @@ const GrafitApp = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log(data);
+    // console.log(data);
+
     onDataChange(data);
-    SetIsDataNew(true);
+
+    setState((prevState) => {
+      return { ...prevState, isDataNew: true };
+    });
     setTimeout(() => {
-      SetIsDataNew(false);
+      setState((prevState) => {
+        return { ...prevState, isDataNew: false };
+      });
     }, 1000);
   }, [data]);
+
+  const getActiveTabByPath = (currentTab) => {
+    switch (currentTab) {
+      case "/":
+        return "home";
+      case "/graf":
+        return "graf";
+      default:
+        return "home";
+    }
+  };
 
   const updateDimensions = () => {
     // console.log("CHNAGED!");
@@ -69,22 +96,35 @@ const GrafitApp = (props) => {
       height: window.innerHeight - 16 * 8,
       width: window.innerWidth - 10,
     };
-    setDynamicHeight(dynamicHeight);
+    setState({ ...grafitAppState, dynamicHeight: dynamicHeight });
   };
 
   const onDataChange = (newData) => {
     // data is a movie
     if (newData.Type === "movie") {
       if (newData.Response === "False") {
-        setIsError({ error: true });
+        setState((prevState) => {
+          return { ...prevState, error: { error: true } };
+        });
         handleSnackbar();
       } else {
-        setDataType("movie");
-
+        // setState((prevState) => {
+        //   return { ...prevState, dataType: "movie" };
+        // });
+        setCurrSearchType("movie");
         dataGrapher.fitMovieData(newData).then((movieData) => {
-          setGrafMovieData(movieData);
-          setName(movieData.name);
-          setIsError(false);
+          console.log(movieData);
+          setState((prevState) => {
+            return {
+              ...prevState,
+              grafMovieData: movieData,
+              name: movieData.name,
+              // error: false,
+              // showInfo: null,
+              // average: null,
+              dataType: "movie"
+            };
+          });
           handleSnackbar();
         });
       }
@@ -92,20 +132,32 @@ const GrafitApp = (props) => {
     else {
       if (!newData.values) {
         if (!newData.starter) {
-          setIsError({ error: true });
+          setState((prevState) => {
+            return { ...prevState, error: { error: true } };
+          });
           handleSnackbar();
         }
       } else {
-        setDataType("series");
+        // setState((prevState) => {
+        //   return { ...prevState, dataType: "series" };
+        // });
+        setCurrSearchType("series");
         const seriesInfo = newData.seriesInfo;
 
         dataGrapher.fitShowtoGraf(newData.values).then((dataForGraf) => {
-          console.log(dataForGraf);
-          setGrafSeriesData(dataForGraf);
-          setName(dataForGraf.name);
-          setAverage(dataForGraf.average);
-          setIsError(false);
-          setShowInfo(seriesInfo);
+          // console.log(dataForGraf);
+          setState((prevState) => {
+            return {
+              ...prevState,
+              grafSeriesData: dataForGraf,
+              name: dataForGraf.name,
+              average: dataForGraf.average,
+              // error: false,
+              showInfo: seriesInfo,
+              dataType: "series",
+            };
+          });
+
           handleSnackbar();
         });
       }
@@ -129,43 +181,43 @@ const GrafitApp = (props) => {
       return !prevState;
     });
   };
-  console.log(data);
+
   return (
     <main
       className={`main-graf ${theme === "dark" ? "dark-bgc" : "light-bgc"}`}
     >
       <main className="graf-app grid">
         <GrafInfo
-          error={error}
-          name={name}
+          error={grafitAppState.error}
+          name={grafitAppState.name}
           theme={theme}
           snackbar={snackbar}
           //   toggleDark={handleDarkModeChange}
-          episodeCount={grafSeriesData.episodeCount}
-          isDataNew={isDataNew}
+          episodeCount={grafitAppState.grafSeriesData.episodeCount}
+          isDataNew={grafitAppState.isDataNew}
           grafView={grafView}
           toggleDescription={onViewDescription}
           showDescription={showDescription}
-          dataType={dataType}
+          dataType={grafitAppState.dataType}
         />
-        <section className="graf" style={{ ...dynamicHeight }}>
-          {dataType === "series" ? (
+        <section className="graf" style={{ ...grafitAppState.dynamicHeight }}>
+          {grafitAppState.dataType === "series" ? (
             <>
               <GrafSeriesLine
-                data={grafSeriesData.dataSet}
-                average={average}
+                data={grafitAppState.grafSeriesData.dataSet}
+                average={grafitAppState.average}
                 theme={theme}
                 grafView={grafView}
               />
               <GrafDescription
                 show={showDescription}
                 theme={theme}
-                showInfo={showInfo}
+                showInfo={grafitAppState.showInfo}
                 onToggleDescription={onViewDescription}
               />
             </>
           ) : (
-            <GrafMovieInfo data={grafMovieData} theme={theme} />
+            <GrafMovieInfo data={grafitAppState.grafMovieData} theme={theme} />
           )}
         </section>
       </main>
@@ -174,7 +226,7 @@ const GrafitApp = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
+  // console.log(state);
   return {
     activeTab: state.menu.activeTab,
     theme: state.graf.theme,

@@ -60,7 +60,9 @@ const GrafInfo = (props) => {
             <p className={"graf-name"}>{grafName}</p>
             {dataType === "series" ? (
               <>
-                <p className="episode-count">{`[${episodeCount} episodes]`}</p>
+                {episodeCount ? (
+                  <p className="episode-count">{`[${episodeCount} episodes]`}</p>
+                ) : null}
                 <p className={`graf-title-info ${grafInfoClass}`}>?</p>
               </>
             ) : null}

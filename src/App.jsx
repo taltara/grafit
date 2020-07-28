@@ -18,6 +18,7 @@ const App = (props) => {
   const { theme, data, setData, switchTab, activeTab } = props;
   const [grafView, setGrafView] = useState("linear");
   const [currTheme, setCurrTheme] = useState("light");
+  const [currSearchType, setCurrSearchType] = useState("series");
 
   const onToggleTheme = () => {
     let newTheme = theme === "dark" ? "light" : "dark";
@@ -33,7 +34,7 @@ const App = (props) => {
 
   useEffect(() => {
     let currentTab = window.location.pathname;
-    console.log(currentTab);
+    // console.log(currentTab);
     let ActiveTab;
 
     switch (currentTab) {
@@ -60,10 +61,11 @@ const App = (props) => {
         setData={setData}
         switchTab={switchTab}
         activeTab={activeTab}
+        currSearchType={currSearchType}
       />
 
       <Switch>
-        <Route render={() => <GrafitApp data={data} />} path="/graf" />
+        <Route render={() => <GrafitApp data={data} setCurrSearchType={setCurrSearchType} />} path="/graf" />
         <Route render={() => <Home theme={theme} />} path="/" />
       </Switch>
     </main>
@@ -71,7 +73,7 @@ const App = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
+  // console.log(state);
   return {
     activeTab: state.menu.activeTab,
     theme: state.graf.theme,

@@ -13,14 +13,22 @@ const TypeSwitcher = (props) => {
     switcherClass,
     switcherImgClass,
     swticherLabelClass,
+    switchOnStart,
   } = props;
 
-  const [currTypeIndex, setCurrTypeIndex] = useState(initType);
+  const [currTypeIndex, setCurrTypeIndex] = useState(
+    !initType ? dataTypes.length - 1 : initType - 1
+  );
   const [switchTransitionClass, setSwitcherTransitionClass] = useState("");
   const [toggleCount, setToggleCount] = useState(0);
 
   useEffect(() => {
     setButtonRippleListeners(animation);
+    if (switchOnStart) {
+      setTimeout(() => {
+        toggleType();
+      }, 150);
+    }
   }, []);
 
   const setSwitcherRef = (element) => {

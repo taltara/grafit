@@ -32,7 +32,7 @@ const OptionsModal = (props) => {
     },
   });
 
-  
+  const isMinified =  window.innerWidth <= 800;
   // console.log(children);
   return (
     <div className={`modal modal-${theme}`}>
@@ -47,7 +47,7 @@ const OptionsModal = (props) => {
           onExiting={onExiting}
           
 
-          elevation={(type === "search") ? 5 : 7}
+          elevation={(type === "search" && !isMinified) ? 5 : 7}
           getContentAnchorEl={null}
           anchorOrigin={{
             vertical: (type === "search") ? "center" : "bottom",

@@ -22,12 +22,14 @@ const MenuToolbar = (props) => {
     setData,
     switchTab,
     activeTab,
+    currSearchType,
   } = props;
 
   const [currTab, setCurrTab] = useState(activeTab);
   const [isOptionsOpen, setOptionsOpen] = useState(false);
   const [isSearchOpen, setSearchOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [mediaSearchType, setMediaSearchType] = useState("series");
   const [isMouseClicked, setMouseClicked] = useState({
     clicked: false,
     source: "options",
@@ -35,19 +37,16 @@ const MenuToolbar = (props) => {
   const inGraf = currTab === "graf";
 
   const onOpenOptions = (event) => {
-    // console.log(activeButton.current);
     setOptionsOpen(true);
     setAnchorEl(event.currentTarget);
   };
 
   const onOpenSearch = (event) => {
-    // console.log(activeButton.current);
     setSearchOpen(true);
     setAnchorEl(event.currentTarget);
   };
 
   const onCloseOptions = () => {
-    // console.log(activeButton.current);
     setMouseClicked({ clicked: false });
     setTimeout(() => {
       setOptionsOpen(false);
@@ -56,7 +55,6 @@ const MenuToolbar = (props) => {
   };
 
   const onCloseSearch = () => {
-    // console.log(activeButton.current);
     setMouseClicked({ clicked: false });
     setTimeout(() => {
       setSearchOpen(false);
@@ -66,7 +64,7 @@ const MenuToolbar = (props) => {
 
   useEffect(() => {
     let currentTab = window.location.pathname;
-    // console.log(currentTab);
+
     utilServices.setButtonRippleListeners("general");
 
     switch (currentTab) {
@@ -89,7 +87,7 @@ const MenuToolbar = (props) => {
   }, [activeTab]);
 
   const onSetTab = (ActiveTab) => {
-    console.log(ActiveTab);
+    // console.log(ActiveTab);
     setCurrTab(ActiveTab);
     switchTab(ActiveTab);
   };
@@ -107,7 +105,7 @@ const MenuToolbar = (props) => {
   };
 
   const onDataSearch = (data) => {
-    console.log(data);
+    // console.log(data);
     if (data) {
       onCloseSearch();
     }
@@ -124,14 +122,14 @@ const MenuToolbar = (props) => {
           classes="darkmode-switch"
           onToggle={onToggleTheme}
         />
-        {inGraf && (
+        {inGraf && currSearchType === "series" ? (
           <LabeledContoller label="Graf View" name="view">
             <GrafInfoShape
               grafView={grafView}
               handleAlignment={handleAlignment}
             />
           </LabeledContoller>
-        )}
+        ) : null}
       </div>
     ) : isSearchOpen ? (
       <SearchContainer

@@ -35,7 +35,7 @@ const GrafitSeriesLine = (props) => {
         };
     
         const dataLineReady = lineDataColorByTheme();
-        console.log(dataLineReady);
+        // console.log(dataLineReady);
         return (
           <ResponsiveLine
             data={dataLineReady}

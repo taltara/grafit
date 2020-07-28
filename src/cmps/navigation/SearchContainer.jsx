@@ -8,7 +8,6 @@ import TypeSwitcher from "./TypeSwitcher/TypeSwitcher";
 import DataPreview from "./DataPreview";
 
 const SearchContainer = (props) => {
-
   let inputRef = useRef();
 
   const { onDataSearch, isSearchOpen } = props;
@@ -20,10 +19,6 @@ const SearchContainer = (props) => {
   const [result, setResult] = useState(null);
   const [resultInfo, setResultInfo] = useState(null);
 
-  // const searchState = useState({
-
-  // })
-
   useEffect(() => {
     if (props.name !== current) {
       setIsSearching(false);
@@ -32,18 +27,25 @@ const SearchContainer = (props) => {
   }, [props.name, current]);
 
   useEffect(() => {
-    if(inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [searchType])
+    inputRef.current.focus();
+  }, [searchType]);
 
   useEffect(() => {
+
     if (isSearchOpen) {
-      setTimeout(() => {
-        setOpenClass("open");
-      }, 50);
+      if(openClass === "") {
+        setTimeout(() => {
+          setOpenClass("open");
+        }, 50);
+      } else {
+        setOpenClass("");
+        setTimeout(() => {
+          setOpenClass("open");
+        }, 50);
+      }
     } else {
       setOpenClass("");
+      
     }
   }, [isSearchOpen]);
 
@@ -88,7 +90,7 @@ const SearchContainer = (props) => {
         // if(data.values[0].Title !== current) {
         // console.log('NOT SAME');
 
-        setResult({ data, Type: searchType});
+        setResult({ data, Type: searchType });
 
         // } else  {
         // console.log('SAME');
@@ -98,7 +100,6 @@ const SearchContainer = (props) => {
   };
 
   const onDataSelect = () => {
-
     onDataSearch(result.data);
     setIsSearching(false);
   };
@@ -123,7 +124,6 @@ const SearchContainer = (props) => {
           placeholder={`Search ${
             searchType === "series" ? "TV Shows" : "Movies"
           }`}
-          autoFocus
           ref={inputRef}
         />
         <TypeSwitcher
@@ -137,6 +137,7 @@ const SearchContainer = (props) => {
           switcherClass="type-switcher"
           switcherImgClass="switcher-img"
           swticherLabelClass="switcher-label"
+          switchOnStart={true}
         />
       </form>
       {result ? (

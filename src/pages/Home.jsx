@@ -8,7 +8,7 @@ const Home = (props) => {
     const { theme } = props;
     console.log(theme);
     return (
-        <main className={`home-main main-${theme} flex column align-end space-center`} >
+        <main className={`home-main main-${theme} flex column align-end space-start`} >
             <section className="home-content flex column align-center space-center">
 
                 <h1 className="home-header">GRAFIT.</h1>

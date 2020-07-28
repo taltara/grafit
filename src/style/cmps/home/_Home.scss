@@ -1,11 +1,13 @@
 .home-main {
   font-size: 2.5rem;
+  height: inherit;
   .home-content {
     min-width: 750px;
     width: 75%;
     text-align: center;
-    margin: auto;
-
+    margin-right: auto;
+    margin-left: auto;
+    // height: 100%;
     & p {
       &:not(:last-of-type) {
         margin-bottom: 2rem;
@@ -26,6 +28,7 @@
 
       .type-icon {
         width: 3rem;
+        height: auto;
       }
     }
   }
