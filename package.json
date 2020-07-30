@@ -6,6 +6,7 @@
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.51",
+    "@nivo/bar": "^0.62.0",
     "@nivo/line": "^0.61.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -44,7 +45,9 @@
   },
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "app.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint-plugin-react-hooks": "^4.0.8"
+  },
   "author": "Tal Tarablus",
   "license": "ISC"
 }

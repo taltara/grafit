@@ -17,7 +17,7 @@ const TypeSwitcher = (props) => {
   } = props;
 
   const [currTypeIndex, setCurrTypeIndex] = useState(
-    !initType ? dataTypes.length - 1 : initType - 1
+    switchOnStart ? (!initType ? dataTypes.length - 1 : initType - 1) : initType
   );
   const [switchTransitionClass, setSwitcherTransitionClass] = useState("");
   const [toggleCount, setToggleCount] = useState(0);
@@ -27,7 +27,7 @@ const TypeSwitcher = (props) => {
     if (switchOnStart) {
       setTimeout(() => {
         toggleType();
-      }, 150);
+      }, 100);
     }
   }, []);
 

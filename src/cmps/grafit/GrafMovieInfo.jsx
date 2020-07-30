@@ -1,23 +1,62 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-import MovieCompareLine from "./MovieCompareLine";
+import MovieCompareBar from "./MovieCompareBar";
 
 const GrafMovieInfo = (props) => {
   const { data, theme } = props;
-  console.log(data);
+  const [movieInfo, setMovieInfo] = useState(data);
+
+  useEffect(() => {
+    if (data !== movieInfo) {
+      setMovieInfo(data);
+    }
+  }, [data]);
+
+  let actors;
+  if(movieInfo) {
+    actors = data.actors.join(", ");
+    actors = actors.slice(0, actors.length - 2);
+
+  }
   return (
     <>
-      {data ? (
+      {movieInfo ? (
         <div className="movie-info flex column flex align-center space-center">
+          <div className="upper-info-block flex column align-start space-center">
+            <span className="flex align-center space-center">
+              <p className="upper-plot">{data.plot}</p>
+            </span>
+            <span className="flex align-center space-center">
+              <p className="secondary">{`Actors: `}</p>
 
-          {/* <MovieCompareLine
-            name={data.name}
+              <p className="upper-actors">{actors}</p>
+            </span>
+            <span className="flex align-center space-center">
+              <p className="secondary">{`Director: `}</p>
+
+              <p className="upper-director">{data.director}</p>
+            </span>
+            <span className="flex align-center space-center">
+              <p className="secondary">{`Awards: `}</p>
+
+              <p className="upper-awards">{data.awards}</p>
+            </span>
+            
+            <span className="flex align-center space-center">
+              <p className="secondary">{`Country: `}</p>
+
+              <p className="upper-country">{data.country}</p>
+            </span>
+            
+          </div>
+          <MovieCompareBar
+            name={movieInfo.name}
             dataCompare={{
-              boxOffice: data.boxOffice ? data.boxOffice : null,
-              rating: data.imdbRating,
+              boxOffice: movieInfo.boxOffice ? movieInfo.boxOffice : null,
+              rating: movieInfo.imdbRating,
             }}
             theme={theme}
-          /> */}
+          />
         </div>
       ) : null}
     </>
