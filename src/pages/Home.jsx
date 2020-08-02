@@ -38,7 +38,7 @@ const Home = (props) => {
           favorite Movies & TV Shows, all using cutting edge tech like React,
           SASS, Redux alongside beautiful, self-built components!
         </p>
-        <div className="home-images flex align-center space-between">
+        <div className={`home-images main-images-${theme} flex align-center space-between`}>
           <IconTv className="type-icon" />
           <IconFilm className="type-icon" />
         </div>

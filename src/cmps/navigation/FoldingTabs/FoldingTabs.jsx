@@ -36,16 +36,6 @@ const FoldingTabs = (props) => {
     });
   }, [updateCondensed]);
 
-  // const onHoverCondensed = (hovering) => {
-  //   setIsOpen(hovering);
-  // };
-  // const onClickCondensed = (event) => {
-  //   event.stopPropagation();
-  //   if (!isOpen) {
-  //     setIsOpen(true);
-  //   }
-  // };
-
   const handleOutsideClick = () => {
     if (toCloseCondensed === "unset") {
       setToCloseCondensed(true);
@@ -65,7 +55,7 @@ const FoldingTabs = (props) => {
   
   const tabsListWidth = isCondensed ? 100 : tabs.length * 67;
   const tabsListHeight = areTabsOpen ? tabs.length * 36 : 36;
-  // console.log(activeTab);
+
   return (
     <ClickAwayListener onClickAway={handleOutsideClick}>
       <ul

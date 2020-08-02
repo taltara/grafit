@@ -11,6 +11,8 @@ const OptionsModal = (props) => {
 
   const { anchorEl, onCloseOptions, children, onExiting, theme, type } = props;
 
+  const isMobile = window.innerWidth <= 800;
+
   const gridTheme = createMuiTheme({
     overrides: {
       MuiGrid: {
@@ -50,12 +52,12 @@ const OptionsModal = (props) => {
           elevation={(type === "search" && !isMinified) ? 5 : 7}
           getContentAnchorEl={null}
           anchorOrigin={{
-            vertical: (type === "search") ? "center" : "bottom",
-            horizontal: (type === "search") ? "left" : "center",
+            vertical: (type === "search" && !isMobile) ? "center" : "bottom",
+            horizontal: (type === "search" && !isMobile) ? "left" : "center",
           }}
           transformOrigin={{
-            vertical: (type === "search") ? "center"  : "top",
-            horizontal: (type === "search") ? "right" : "center",
+            vertical: (type === "search" && !isMobile) ? "center"  : "top",
+            horizontal: (type === "search" && !isMobile) ? "right" : "center",
           }}
         >
           {children && children}

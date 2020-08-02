@@ -77,7 +77,7 @@ const FoldedTabs = (props) => {
           onClick={toggleOpen}
         >
           <nav
-            className={`folded-tabs flex column align-center space-start ${foldedTabsClass}`}
+            className={`folded-tabs folded-${theme} flex column align-center space-start ${foldedTabsClass}`}
             style={{ height: foldedTabsHeight }}
           >
             {tabs.map((tab, index) => {
