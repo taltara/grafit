@@ -67,23 +67,7 @@ const NavTabs = (props) => {
       >
         {tabs.map((tab, index) => {
           let style = {};
-          // if (isCondensed) {
-          //   style = {
-          //     backgroundColor: "#f7f7f7",
-          //   };
-          //   if (isOpen) {
-          //     style = {
-          //       top: index * 36,
-          //       zIndex: tabs.length - index,
-          //     };
-          //   } else {
-          //     style = {
-          //       transform: `translateY(${index * 10}%)`,
-          //       zIndex: tabs.length - index,
-          //       color: `rgba(0, 0, 0, ${1 - (1 / tabs.length) * index})`,
-          //     };
-          //   }
-          // }
+         
           return (
             <TiltButton
               buttonType="link"
@@ -96,7 +80,7 @@ const NavTabs = (props) => {
               animation="activeTab"
               onClick={() => onSetTab(tab.label === "home" ? "" : tab.label)}
               buttonClass="tilt-button"
-              buttonStyle={style}
+              buttonStyle={{}}
             />
           );
         })}

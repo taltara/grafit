@@ -59,7 +59,6 @@ const FoldedTabs = (props) => {
 
   return (
     <>
-      {/* {TabsContentContainer( */}
 
       <Tilt
         className={`Tilt folded-tabs-container`}

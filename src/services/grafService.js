@@ -1,6 +1,25 @@
 // import utilService from './utilService.js'
 // import storageService from './storageService.js'
 
+const searchMediaData = (searchObj) => {
+  const { type, search } = searchObj;
+
+  return fetch(
+    `https://cors-anywhere.herokuapp.com/https://www.omdbapi.com/?apikey=7b9ab2e6&type=${type}&s=${search}`
+  )
+    .then((res) => res.json())
+    .then((result) => {
+      if (result.Response === "True") {
+          let titles = [];
+          result.Search.forEach(searchItem => {
+            titles.push({ title: searchItem.Title, id: searchItem.imdbID });
+          })
+        return { error: false, titles, results: result.Search };
+      } else {
+        return { error: true, searchTerm: search };
+      }
+    });
+};
 
 
 const getGrafData = (searchObj) => {
@@ -16,11 +35,14 @@ const getGrafData = (searchObj) => {
       .then((res) => res.json())
       .then(
         (result) => {
-          let id = result.imdbID;
+          console.log(result);
+          const id = result.imdbID;
           seriesInfo = result;
           for (let i = 0; i < result.totalSeasons; i++) {
             promises[i] = fetch(
-              `https://cors-anywhere.herokuapp.com/https://www.omdbapi.com/?apikey=7b9ab2e6&i=${id}&Season=${i + 1}`
+              `https://cors-anywhere.herokuapp.com/https://www.omdbapi.com/?apikey=7b9ab2e6&i=${id}&Season=${
+                i + 1
+              }`
             )
               .then((res) => res.json())
               .then(
@@ -75,14 +97,12 @@ const getGrafData = (searchObj) => {
         }
       );
   }
-}
+};
 
-const getTopBoxOfficeMovies = () => {
-  
-}
-
+const getTopBoxOfficeMovies = () => {};
 
 export default {
   getGrafData,
+  searchMediaData,
   getTopBoxOfficeMovies,
 };

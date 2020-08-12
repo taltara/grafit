@@ -13,6 +13,8 @@ const MovieCompareBar = (props) => {
   const [compareVertical, setCompareVertical] = useState("imdbRating");
   const [searchedIndex, setSearchedIndex] = useState("");
 
+  let doesNameExist = false;
+
   const getDataByVertical = () => {
     let field = "";
     field =
@@ -25,17 +27,21 @@ const MovieCompareBar = (props) => {
         compareVertical === "boxOffice"
           ? +data[field].slice(1).replace(/,/gi, "")
           : +data[field];
+      if (data["Title"] === name) doesNameExist = true;
 
       return { x: dataSnip, y: 0, name: data["Title"], color: data.color };
     });
     // console.log(dataCompare);
-    const currDataSnip =
-      dataCompare[compareVertical] !== "N/A"
-        ? compareVertical === "boxOffice"
-          ? +dataCompare["boxOffice"].slice(1).replace(/,/gi, "")
-          : +dataCompare["imdbRating"]
-        : null;
-    dataVertical.push({ x: currDataSnip, y: 0, name: name, color: "#efea5a" });
+    if(!doesNameExist) {
+
+      const currDataSnip =
+        dataCompare[compareVertical] !== "N/A"
+          ? compareVertical === "boxOffice"
+            ? +dataCompare["boxOffice"].slice(1).replace(/,/gi, "")
+            : +dataCompare["imdbRating"]
+          : null;
+      dataVertical.push({ x: currDataSnip, y: 0, name: name, color: "#efea5a" });
+    }
     // console.log(dataVertical[dataVertical.length - 1]);
     const isReversed = false;
     dataVertical.sort(utilService.dynamicSort(`${isReversed ? "-" : ""}x`));
@@ -43,7 +49,7 @@ const MovieCompareBar = (props) => {
       return vertical.name === name;
     });
     // setSearchedIndex(searchedForIndex);
-    // console.log(dataVertical);
+    console.log(searchedForIndex);
     return [{ id: "Top Movies", data: dataVertical, searchedIndex }];
   };
 
@@ -73,7 +79,9 @@ const MovieCompareBar = (props) => {
   const barGraphSettings = {
     theme: {
       fontSize: 12,
-      textColor: theme === "dark" ? "rgba(255, 255, 255, 0.9)" : "black",
+      text: {
+        fill: theme === "dark" ? "rgba(255, 255, 255, 0.9)" : "black",
+      },
       fontFamily: "animosaExtraLight",
       crosshair: {
         line: {
@@ -86,6 +94,13 @@ const MovieCompareBar = (props) => {
       annotations: {
         text: {
           fill: "rgba(255, 255, 255, 1)",
+        },
+      },
+      axisBottom: {
+        ticks: {
+          text: {
+            fill: "white",
+          },
         },
       },
     },
@@ -106,22 +121,13 @@ const MovieCompareBar = (props) => {
           height={28}
           fill="rgba(0, 0, 0, .05)"
         />
-        {/* <rect
-          x={-25}
-          y={-12}
-          rx={2}
-          ry={2}
-          width={50}
-          height={24}
-          fill="rgba(247, 247, 247, 1)"
-        /> */}
 
         <line stroke="rgb(232, 193, 160)" strokeWidth={1.5} y1={-22} y2={-12} />
         <text
           textAnchor="middle"
           dominantBaseline="middle"
           style={{
-            fill: "#333",
+            fill: theme === "dark" ? "white" : "#333",
             fontSize: 10,
           }}
         >
@@ -136,9 +142,11 @@ const MovieCompareBar = (props) => {
   const isBoxOffice = compareVertical === "boxOffice";
   // console.log(isBoxOffice);
   return (
-    <div className="movie-compare-block flex align-center space-center">
-      <div className="compare-info flex column align-start space-start">
-        <p className="compare-info-title">{`${currData[0].id} By:`}</p>
+    <div
+      className={`movie-compare-block compare-block-${theme} flex align-center space-center`}
+    >
+      <div className="compare-info flex column align-center space-center">
+        {/* <p className="compare-info-title">{`${currData[0].id} By:`}</p> */}
         <TypeSwitcher
           handleTypeChange={handleVerticalChange}
           dataTypes={[
@@ -158,7 +166,7 @@ const MovieCompareBar = (props) => {
           data={currData[0].data}
           keys={["x"]}
           indexBy="name"
-          margin={{ top: 10, right: 10, bottom: 30, left: 10 }}
+          margin={{ top: 10, right: 10, bottom: 30, left: 0 }}
           padding={0.3}
           colors={(point) => point.data.color}
           borderColor={{ from: "color", modifiers: [["darker", 1.6]] }}
@@ -167,7 +175,7 @@ const MovieCompareBar = (props) => {
           axisRight={null}
           enableGridX={false}
           enableGridY={false}
-        labelFormat={(value) => shortenValue(value, "$", 1, true)}
+          labelFormat={(value) => shortenValue(value, "$", 1, true)}
           // layout="horizontal"
           axisBottom={{
             // format: (value) => {
@@ -189,7 +197,7 @@ const MovieCompareBar = (props) => {
                   background:
                     theme === "dark"
                       ? "rgba(255, 255, 255, 0.99)"
-                      : "rgba(32,33,36, 0.95)",
+                      : "rgba(32,33,36, 0.85)",
                   color: theme === "dark" ? "black" : "rgba(255, 255, 255, 1)",
                   padding: "4.5px 12px",
                   border: "1px solid #ccc",

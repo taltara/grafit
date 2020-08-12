@@ -29,7 +29,7 @@ const GrafInfo = (props) => {
   const alertMessage = !error
     ? `Success! Showing: '${name}'`
     : "Sorry, please refine your search";
-
+  const infoHeaderClass = dataType === "series" ? "" : "info-header-movie"; 
   return (
     <>
       <Snackbar
@@ -41,7 +41,7 @@ const GrafInfo = (props) => {
       >
         <Alert severity={severity}>{alertMessage}</Alert>
       </Snackbar>
-      <header className="info-header flex align-center space-around">
+      <header className={`info-header ${infoHeaderClass} flex align-center space-around`}>
         <title
           onClick={() => {
             if (dataType === "series") toggleDescription();
@@ -49,7 +49,7 @@ const GrafInfo = (props) => {
           className={`graf-title flex column align-center space-center ${grafTitleClass}`}
         >
           <div
-            className={`graf-title-content flex align-baseline space-center ${grafTitleContentClass}`}
+            className={`graf-title-content flex align-baseline space-between ${grafTitleContentClass}`}
             onMouseEnter={() =>
               setIsHovering(
                 showDescription ? false : dataType === "series" ? true : false
@@ -57,14 +57,19 @@ const GrafInfo = (props) => {
             }
             onMouseLeave={() => setIsHovering(false)}
           >
-            <p className={"graf-name"}>{grafName}</p>
+            <div className="title-text flex align-baseline space-center">
+              <p className={"graf-name"}>{grafName}</p>
+              {dataType === "series" && (
+                <>
+                  {episodeCount ? (
+                    <p className="episode-count">{`[${episodeCount} episodes]`}</p>
+                  ) : null}
+                </>
+              )}
+            </div>
+
             {dataType === "series" ? (
-              <>
-                {episodeCount ? (
-                  <p className="episode-count">{`[${episodeCount} episodes]`}</p>
-                ) : null}
-                <p className={`graf-title-info ${grafInfoClass}`}>?</p>
-              </>
+              <p className={`graf-title-info ${grafInfoClass}`}>?</p>
             ) : null}
           </div>
         </title>

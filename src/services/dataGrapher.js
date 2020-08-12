@@ -11,7 +11,7 @@ const fitShowtoGraf = (data) => {
 
   //== Per season flow
   data.forEach((season, index) => {
-    if (season.Episodes[0].Released !== "N/A") {
+    if (season && season.Episodes[0].Released !== "N/A") {
       average = 0;
 
       if (!season.Error) {

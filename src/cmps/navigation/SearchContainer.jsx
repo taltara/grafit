@@ -4,6 +4,7 @@ import grafService from "../../services/grafService";
 import { ReactComponent as TvIcon } from "../../assets/img/tv.svg";
 import { ReactComponent as MoviesIcon } from "../../assets/img/movie.svg";
 
+import SearchOptions from "./SearchOptions";
 import TypeSwitcher from "./TypeSwitcher/TypeSwitcher";
 import DataPreview from "./DataPreview";
 
@@ -13,11 +14,14 @@ const SearchContainer = (props) => {
   const { onDataSearch, isSearchOpen } = props;
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState("series");
+  const [searchStatus, setSearchStatus] = useState({});
+  const [searchResults, setSearchResults] = useState(null);
   const [searching, setIsSearching] = useState(false);
   const [current, setCurrent] = useState("Default");
   const [openClass, setOpenClass] = useState("");
   const [result, setResult] = useState(null);
   const [resultInfo, setResultInfo] = useState(null);
+  const [resultOptions, setResultOptions] = useState([]);
 
   useEffect(() => {
     if (props.name !== current) {
@@ -31,9 +35,8 @@ const SearchContainer = (props) => {
   }, [searchType]);
 
   useEffect(() => {
-
     if (isSearchOpen) {
-      if(openClass === "") {
+      if (openClass === "") {
         setTimeout(() => {
           setOpenClass("open");
         }, 50);
@@ -45,7 +48,6 @@ const SearchContainer = (props) => {
       }
     } else {
       setOpenClass("");
-      
     }
   }, [isSearchOpen]);
 
@@ -69,11 +71,22 @@ const SearchContainer = (props) => {
 
     let data;
     let dataLocation = searchType === "series" ? "values" : "Search";
+
     grafService
       .getGrafData(searchObj)
       .then((res) => (data = res))
       .then((res) => {
         console.log(data);
+
+        if (!data.error) {
+          setResultOptions(data.titles);
+          setSearchResults(data.results);
+          setSearchStatus({ result: true, picked: false });
+        } else {
+          setSearchResults(null);
+          setSearchStatus({ result: false, picked: false });
+        }
+
         if (searchType === "series") {
           if (!data[dataLocation].length) {
             data = null;
@@ -99,9 +112,92 @@ const SearchContainer = (props) => {
       });
   };
 
+  const handleSearching = (event) => {
+    event.preventDefault();
+    if (searching) return;
+    setIsSearching(true);
+
+    let searchObj = {
+      type: searchType,
+      search: searchTerm,
+    };
+
+    let data;
+    
+    grafService
+      .searchMediaData(searchObj)
+      .then((res) => (data = res))
+      .then((res) => {
+        console.log(data);
+
+        if (!data.error) {
+          setResultOptions(data.titles);
+          setSearchResults(data.results);
+          setSearchStatus({ result: true, picked: false });
+        } else {
+          setSearchResults(null);
+          setSearchStatus({ result: false, picked: false });
+        }
+
+        // if (searchType === "series") {
+        //   if (!data[dataLocation].length) {
+        //     data = null;
+        //     setResult(null);
+        //   } else {
+        //     setResultInfo(
+        //       data[searchType === "series" ? "seriesInfo" : "movieInfo"]
+        //     );
+        //   }
+        // } else {
+        //   setResultInfo(null);
+        // }
+
+        // if(data.values[0].Title !== current) {
+        // console.log('NOT SAME');
+
+        // setResult({ data, Type: searchType });
+
+        // } else  {
+        // console.log('SAME');
+        setIsSearching(false);
+        // }
+      });
+  };
+
   const onDataSelect = () => {
     onDataSearch(result.data);
     setIsSearching(false);
+  };
+
+  const onMediaPick = (id) => {
+    let currType = searchResults[0].Type === "series" ? "series" : "movie";
+    let dataLocation = searchType === "series" ? "values" : "Search";
+    grafService
+      .getGrafData({ id, type: currType })
+      .then((data) => {
+        if (searchType === "series") {
+          if (!data[dataLocation].length) {
+            data = null;
+            setResult(null);
+          } else {
+            setResultInfo(
+              data[searchType === "series" ? "seriesInfo" : "movieInfo"]
+            );
+          }
+        } else {
+          setResultInfo(null);
+        }
+
+        // if(data.values[0].Title !== current) {
+        // console.log('NOT SAME');
+
+        setResult({ data, Type: searchType });
+
+        // } else  {
+        // console.log('SAME');
+        setIsSearching(false);
+        // }
+      })
   };
 
   let searchContainerClass = searching ? "search-ongoing " : "";
@@ -148,6 +244,8 @@ const SearchContainer = (props) => {
             setResult={setResult}
           />
         </div>
+      ) : searchStatus.result ? (
+        <SearchOptions onMediaPick={onMediaPick} />
       ) : null}
     </div>
   );

@@ -21,11 +21,12 @@ const GrafMovieInfo = (props) => {
   return (
     <>
       {movieInfo ? (
-        <div className="movie-info flex column flex align-center space-center">
+        <div className={`movie-info movie-${theme} flex column flex align-center space-center`}>
           <div className="upper-info-block flex column align-start space-center">
             <span className="flex align-center space-center">
               <p className="upper-plot">{data.plot}</p>
             </span>
+            <div className="titled-info flex column align-start space-start">
             <span className="flex align-center space-center">
               <p className="secondary">{`Actors: `}</p>
 
@@ -47,6 +48,7 @@ const GrafMovieInfo = (props) => {
 
               <p className="upper-country">{data.country}</p>
             </span>
+            </div>
             
           </div>
           <MovieCompareBar

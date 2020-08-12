@@ -1,0 +1,31 @@
+.about {
+  height: 100%;
+  padding-top: 100px;
+  font-family: animosaExtraLight;
+
+  .utils-user-icon {
+    transition: 0.35s cubic-bezier(0.42, 0.5, 0.25, 1);
+    min-width: 100px;
+    max-width: 300px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+    opacity: 0;
+    &.show-icon {
+        opacity: 1;
+    }
+    &:hover {
+      box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.75);
+      transform: scale(1.05);
+    }
+  }
+
+  .about-name {
+    font-size: 30px;
+    margin-bottom: 7.5px;
+  }
+  .about-link {
+    font-size: 20px;
+  }
+
+}

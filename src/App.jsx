@@ -4,6 +4,7 @@ import "./style/global.scss";
 import GrafitApp from "./pages/GrafitApp.jsx";
 import MenuToolbar from "./cmps/navigation/MenuToolbar.jsx";
 import Home from "./pages/Home.jsx";
+import About from "./pages/About.jsx";
 import { connect } from "react-redux";
 import { switchTab } from "./store/actions/MenuActions";
 import {
@@ -66,6 +67,7 @@ const App = (props) => {
 
       <Switch>
         <Route render={() => <GrafitApp data={data} setCurrSearchType={setCurrSearchType} />} path="/graf" />
+        <Route render={() => <About theme={theme} />} path="/about" />
         <Route render={() => <Home theme={theme} />} path="/" />
       </Switch>
     </main>

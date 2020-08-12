@@ -78,22 +78,22 @@ const TiltButton = (props) => {
     return false;
   };
 
-  const ButtonContentWrapper = (el) => {
-    if (isTilt) {
-      return (
-        <Tilt
-          className={`Tilt ${tiltTypeClass} ${tiltClass && tiltClass}`}
-          options={{ ...tiltOptions }}
-        >
-          {el}
-        </Tilt>
-      );
-    } else {
-      return (
-        <div className={`${tiltTypeClass} ${tiltClass && tiltClass}`}>{el}</div>
-      );
-    }
-  };
+  // const ButtonContentWrapper = (el) => {
+  //   if (isTilt) {
+  //     return (
+  //       <Tilt
+  //         className={`Tilt ${tiltTypeClass} ${tiltClass && tiltClass}`}
+  //         options={{ ...tiltOptions }}
+  //       >
+  //         {el}
+  //       </Tilt>
+  //     );
+  //   } else {
+  //     return (
+  //       <div className={`${tiltTypeClass} ${tiltClass && tiltClass}`}>{el}</div>
+  //     );
+  //   }
+  // };
 
   const isType = (type) => type === buttonType;
 

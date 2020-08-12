@@ -36,22 +36,6 @@ const GrafitApp = (props) => {
     width: window.innerWidth - 10,
   });
 
-  // const [grafitAppState, setState] = useState({
-  //   grafSeriesData: defData,
-  //   grafMovieData: null,
-  //   name: "The Office",
-  //   showInfo: info,
-  //   snackbar: false,
-  //   isDataNew: false,
-  //   average: defData.average,
-  //   error: false,
-  //   dataType: "series",
-  //   dynamicHeight: {
-  //     height: window.innerHeight - 128,
-  //     width: window.innerWidth - 10,
-  //   },
-  // });
-
   useEffect(() => {
     let currentTab = window.location.pathname;
     let ActiveTab;
@@ -120,18 +104,6 @@ const GrafitApp = (props) => {
           setDataType("movie");
           setCurrSearchType("movie");
           setGrafMovieData(movieData);
-
-          // setState((prevState) => {
-          //   return {
-          //     ...prevState,
-          //     grafMovieData: movieData,
-          //     name: movieData.name,
-          //     // error: false,
-          //     // showInfo: null,
-          //     // average: null,
-          //     dataType: "movie"
-          //   };
-          // });
           handleSnackbar();
         });
       }
@@ -139,16 +111,12 @@ const GrafitApp = (props) => {
     else {
       if (!newData.values) {
         if (!newData.starter) {
-          // setState((prevState) => {
-          //   return { ...prevState, error: { error: true } };
-          // });
+
           setIsError(true);
           handleSnackbar();
         }
       } else {
-        // setState((prevState) => {
-        //   return { ...prevState, dataType: "series" };
-        // });
+
         const seriesInfo = newData.seriesInfo;
 
         dataGrapher.fitShowtoGraf(newData.values).then((dataForGraf) => {
@@ -159,19 +127,6 @@ const GrafitApp = (props) => {
           setDataType("series");
           setGrafSeriesData(dataForGraf);
           setCurrSearchType("series");
-
-          // setState((prevState) => {
-          //   return {
-          //     ...prevState,
-          //     grafSeriesData: dataForGraf,
-          //     grafMovieData: null,
-          //     name: dataForGraf.name,
-          //     average: dataForGraf.average,
-          //     // error: false,
-          //     showInfo: seriesInfo,
-          //     dataType: "series",
-          //   };
-          // });
 
           handleSnackbar();
         });

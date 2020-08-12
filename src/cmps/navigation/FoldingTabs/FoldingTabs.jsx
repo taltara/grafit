@@ -53,7 +53,7 @@ const FoldingTabs = (props) => {
 
   const tabsListClass = isCondensed ? "start tabs-condensed" : "between";
   
-  const tabsListWidth = isCondensed ? 100 : tabs.length * 67;
+  const tabsListWidth = isCondensed ? 100 : tabs.length * 68;
   const tabsListHeight = areTabsOpen ? tabs.length * 36 : 36;
 
   return (
