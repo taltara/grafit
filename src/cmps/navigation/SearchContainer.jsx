@@ -14,7 +14,10 @@ const SearchContainer = (props) => {
   const { onDataSearch, isSearchOpen } = props;
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState("series");
-  const [searchStatus, setSearchStatus] = useState({});
+  const [searchStatus, setSearchStatus] = useState({
+    result: false,
+    picked: false,
+  });
   const [searchResults, setSearchResults] = useState(null);
   const [searching, setIsSearching] = useState(false);
   const [current, setCurrent] = useState("Default");
@@ -123,11 +126,11 @@ const SearchContainer = (props) => {
     };
 
     let data;
-    
+
     grafService
       .searchMediaData(searchObj)
       .then((res) => (data = res))
-      .then((res) => {
+      .then(() => {
         console.log(data);
 
         if (!data.error) {
@@ -139,28 +142,7 @@ const SearchContainer = (props) => {
           setSearchStatus({ result: false, picked: false });
         }
 
-        // if (searchType === "series") {
-        //   if (!data[dataLocation].length) {
-        //     data = null;
-        //     setResult(null);
-        //   } else {
-        //     setResultInfo(
-        //       data[searchType === "series" ? "seriesInfo" : "movieInfo"]
-        //     );
-        //   }
-        // } else {
-        //   setResultInfo(null);
-        // }
-
-        // if(data.values[0].Title !== current) {
-        // console.log('NOT SAME');
-
-        // setResult({ data, Type: searchType });
-
-        // } else  {
-        // console.log('SAME');
         setIsSearching(false);
-        // }
       });
   };
 
@@ -172,44 +154,38 @@ const SearchContainer = (props) => {
   const onMediaPick = (id) => {
     let currType = searchResults[0].Type === "series" ? "series" : "movie";
     let dataLocation = searchType === "series" ? "values" : "Search";
-    grafService
-      .getGrafData({ id, type: currType })
-      .then((data) => {
-        if (searchType === "series") {
-          if (!data[dataLocation].length) {
-            data = null;
-            setResult(null);
-          } else {
-            setResultInfo(
-              data[searchType === "series" ? "seriesInfo" : "movieInfo"]
-            );
-          }
+    grafService.getMediaData({ imdbID: id, type: currType }).then((data) => {
+      if (searchType === "series") {
+        if (!data[dataLocation].length) {
+          data = null;
+          setResult(null);
         } else {
-          setResultInfo(null);
+          setResultInfo(
+            data[searchType === "series" ? "seriesInfo" : "movieInfo"]
+          );
         }
+      } else {
+        setResultInfo(null);
+      }
+      setSearchStatus({ result: true, picked: true });
+      setResult({ data, Type: searchType });
 
-        // if(data.values[0].Title !== current) {
-        // console.log('NOT SAME');
-
-        setResult({ data, Type: searchType });
-
-        // } else  {
-        // console.log('SAME');
-        setIsSearching(false);
-        // }
-      })
+      setIsSearching(false);
+    });
   };
 
   let searchContainerClass = searching ? "search-ongoing " : "";
-  searchContainerClass += result ? "search-with-result" : "";
+  searchContainerClass +=
+    result || searchStatus.result ? "search-with-result" : "";
   // console.log(result);
+  const resultsClass = !result && searchStatus.result && !searchStatus.picked ? "result-overflow" : "";
   return (
     <div
-      className={`search-container flex column align-center space-between ${openClass} ${searchContainerClass}`}
+      className={`search-container flex column align-center space-start ${openClass} ${searchContainerClass}`}
     >
       <form
         action=""
-        onSubmit={handleSearch}
+        onSubmit={handleSearching}
         className="search-form flex align-center space-between"
       >
         <input
@@ -236,17 +212,18 @@ const SearchContainer = (props) => {
           switchOnStart={true}
         />
       </form>
-      {result ? (
-        <div className="result-container">
+
+      <div className={`result-container ${resultsClass}`}>
+        {result ? (
           <DataPreview
             onDataSelect={onDataSelect}
             data={result.Type === "series" ? resultInfo : result}
             setResult={setResult}
           />
-        </div>
-      ) : searchStatus.result ? (
-        <SearchOptions onMediaPick={onMediaPick} />
-      ) : null}
+        ) : searchStatus.result && !searchStatus.picked ? (
+          <SearchOptions onMediaPick={onMediaPick} options={resultOptions} />
+        ) : null}
+      </div>
     </div>
   );
 };

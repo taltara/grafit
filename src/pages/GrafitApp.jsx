@@ -50,18 +50,13 @@ const GrafitApp = (props) => {
   }, []);
 
   useEffect(() => {
-    // console.log(data);
 
     onDataChange(data);
     SetIsDataNew(true);
-    // setState((prevState) => {
-    //   return { ...prevState, isDataNew: true };
-    // });
+
     setTimeout(() => {
       SetIsDataNew(false);
-      // setState((prevState) => {
-      //   return { ...prevState, isDataNew: false };
-      // });
+
     }, 1000);
   }, [data]);
 
@@ -93,9 +88,6 @@ const GrafitApp = (props) => {
         setIsError(true);
         handleSnackbar();
       } else {
-        // setState((prevState) => {
-        //   return { ...prevState, dataType: "movie" };
-        // });
 
         dataGrapher.fitMovieData(newData).then((movieData) => {
           console.log(movieData);

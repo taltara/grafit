@@ -12,9 +12,9 @@ const searchMediaData = (searchObj) => {
       if (result.Response === "True") {
           let titles = [];
           result.Search.forEach(searchItem => {
-            titles.push({ title: searchItem.Title, id: searchItem.imdbID });
+            titles.push({ title: searchItem.Title, id: searchItem.imdbID, img: searchItem.Poster });
           })
-        return { error: false, titles, results: result.Search };
+        return { error: false, results: result.Search, titles };
       } else {
         return { error: true, searchTerm: search };
       }
@@ -99,10 +99,71 @@ const getGrafData = (searchObj) => {
   }
 };
 
+const getMediaData = (searchObj) => {
+  const { type, imdbID } = searchObj;
+  var seriesInfo;
+
+  if (type === "series") {
+    let promises = [];
+
+    return fetch(
+      `https://cors-anywhere.herokuapp.com/https://www.omdbapi.com/?apikey=7b9ab2e6&i=${imdbID}`
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          const id = result.imdbID;
+          seriesInfo = result;
+          for (let i = 0; i < result.totalSeasons; i++) {
+            promises[i] = fetch(
+              `https://cors-anywhere.herokuapp.com/https://www.omdbapi.com/?apikey=7b9ab2e6&i=${id}&Season=${
+                i + 1
+              }`
+            )
+              .then((res) => res.json())
+              .then(
+                (result) => {
+                  return Promise.resolve(result);
+                },
+                (error) => {
+                  console.error(error);
+                }
+              );
+          }
+
+          return Promise.all(promises).then((values) => {
+            let data = { values, seriesInfo };
+            console.log(data);
+            return data;
+          });
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+  } else {
+    return fetch(
+      `https://cors-anywhere.herokuapp.com/https://www.omdbapi.com/?apikey=7b9ab2e6&i=${imdbID}`
+    )
+      .then((result) => result.json())
+      .then(
+        (result) => {
+          console.log(result);
+          return Promise.resolve(result);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+  }
+};
+
 const getTopBoxOfficeMovies = () => {};
 
 export default {
   getGrafData,
   searchMediaData,
+  getMediaData,
   getTopBoxOfficeMovies,
 };
