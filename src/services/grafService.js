@@ -112,7 +112,7 @@ const getMediaData = (searchObj) => {
       .then((res) => res.json())
       .then(
         (result) => {
-          console.log(result);
+          // console.log(result);
           const id = result.imdbID;
           seriesInfo = result;
           for (let i = 0; i < result.totalSeasons; i++) {
@@ -134,7 +134,7 @@ const getMediaData = (searchObj) => {
 
           return Promise.all(promises).then((values) => {
             let data = { values, seriesInfo };
-            console.log(data);
+            // console.log(data);
             return data;
           });
         },

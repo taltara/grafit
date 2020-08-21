@@ -11,7 +11,7 @@ const DataPreview = (props) => {
   const [exitClass, setExitClass] = useState("");
 
   useEffect(() => {
-    console.log(entranceClass);
+    // console.log(entranceClass);
     const timeout =
       entranceClass === "start" || entranceClass === "preview-entrance"
         ? 100

@@ -21,7 +21,7 @@ const Home = (props) => {
     }, 500);
   }, []);
 
-  console.log(theme);
+  // console.log(theme);
   return (
     <main
       className={`home-main main-${theme} flex column align-end space-start`}

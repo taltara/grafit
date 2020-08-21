@@ -132,7 +132,7 @@ const SearchContainer = (props) => {
       .searchMediaData(searchObj)
       .then((res) => (data = res))
       .then(() => {
-        console.log(data);
+        // console.log(data);
 
         if (!data.error) {
           setResultOptions(data.titles);

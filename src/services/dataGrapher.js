@@ -1,7 +1,7 @@
 
 
 const fitShowtoGraf = (data) => {
-  console.log(data);
+  // console.log(data);
   var dataAll = { dataSet: [] };
 
   let count = 1;

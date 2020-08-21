@@ -14,9 +14,9 @@ const SearchOptions = (props) => {
     
     
   }, []);
-  
+
   useEffect(() => {
-    console.log(entranceClass);
+    // console.log(entranceClass);
     if(showingOptions) {
 
       const timeout =
