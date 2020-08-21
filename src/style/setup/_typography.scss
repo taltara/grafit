@@ -7,10 +7,22 @@
     url("../fonts/bariol/bariol-regular.eot") format("eot");
 }
 
-// Toe The Lineless
+// Raleway
 @font-face {
-  font-family: "toeTheLineless";
-  src: url("../fonts/toeTheLineless/toeTheLineless.woff2") format("woff2");
+  font-family: "raleway";
+  src: url("../fonts/raleway/raleway.ttf") format("truetype");
+}
+@font-face {
+  font-family: "ralewayBold";
+  src: url("../fonts/raleway/ralewayBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "ralewayExtraBold";
+  src: url("../fonts/raleway/ralewayExtraBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "ralewayExtraLight";
+  src: url("../fonts/raleway/ralewayExtraLight.ttf") format("truetype");
 }
 
 // Animosa

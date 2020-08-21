@@ -4,6 +4,7 @@ import grafService from "../../services/grafService";
 import { ReactComponent as TvIcon } from "../../assets/img/tv.svg";
 import { ReactComponent as MoviesIcon } from "../../assets/img/movie.svg";
 
+import LoadingRing from "./LoadingRing";
 import SearchOptions from "./SearchOptions";
 import TypeSwitcher from "./TypeSwitcher/TypeSwitcher";
 import DataPreview from "./DataPreview";
@@ -11,7 +12,7 @@ import DataPreview from "./DataPreview";
 const SearchContainer = (props) => {
   let inputRef = useRef();
 
-  const { onDataSearch, isSearchOpen } = props;
+  const { onDataSearch, isSearchOpen, theme, onCloseSearch } = props;
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState("series");
   const [searchStatus, setSearchStatus] = useState({
@@ -62,58 +63,58 @@ const SearchContainer = (props) => {
     setSearchType(type);
   };
 
-  const handleSearch = (event) => {
-    event.preventDefault();
-    if (searching) return;
-    setIsSearching(true);
+  // const handleSearch = (event) => {
+  //   event.preventDefault();
+  //   if (searching) return;
+  //   setIsSearching(true);
 
-    let searchObj = {
-      type: searchType,
-      search: searchTerm,
-    };
+  //   let searchObj = {
+  //     type: searchType,
+  //     search: searchTerm,
+  //   };
 
-    let data;
-    let dataLocation = searchType === "series" ? "values" : "Search";
+  //   let data;
+  //   let dataLocation = searchType === "series" ? "values" : "Search";
 
-    grafService
-      .getGrafData(searchObj)
-      .then((res) => (data = res))
-      .then((res) => {
-        console.log(data);
+  //   grafService
+  //     .getGrafData(searchObj)
+  //     .then((res) => (data = res))
+  //     .then((res) => {
+  //       console.log(data);
 
-        if (!data.error) {
-          setResultOptions(data.titles);
-          setSearchResults(data.results);
-          setSearchStatus({ result: true, picked: false });
-        } else {
-          setSearchResults(null);
-          setSearchStatus({ result: false, picked: false });
-        }
+  //       if (!data.error) {
+  //         setResultOptions(data.titles);
+  //         setSearchResults(data.results);
+  //         setSearchStatus({ result: true, picked: false });
+  //       } else {
+  //         setSearchResults(null);
+  //         setSearchStatus({ result: false, picked: false });
+  //       }
 
-        if (searchType === "series") {
-          if (!data[dataLocation].length) {
-            data = null;
-            setResult(null);
-          } else {
-            setResultInfo(
-              data[searchType === "series" ? "seriesInfo" : "movieInfo"]
-            );
-          }
-        } else {
-          setResultInfo(null);
-        }
+  //       if (searchType === "series") {
+  //         if (!data[dataLocation].length) {
+  //           data = null;
+  //           setResult(null);
+  //         } else {
+  //           setResultInfo(
+  //             data[searchType === "series" ? "seriesInfo" : "movieInfo"]
+  //           );
+  //         }
+  //       } else {
+  //         setResultInfo(null);
+  //       }
 
-        // if(data.values[0].Title !== current) {
-        // console.log('NOT SAME');
+  //       // if(data.values[0].Title !== current) {
+  //       // console.log('NOT SAME');
 
-        setResult({ data, Type: searchType });
+  //       setResult({ data, Type: searchType });
 
-        // } else  {
-        // console.log('SAME');
-        setIsSearching(false);
-        // }
-      });
-  };
+  //       // } else  {
+  //       // console.log('SAME');
+  //       setIsSearching(false);
+  //       // }
+  //     });
+  // };
 
   const handleSearching = (event) => {
     event.preventDefault();
@@ -147,11 +148,18 @@ const SearchContainer = (props) => {
   };
 
   const onDataSelect = () => {
-    onDataSearch(result.data);
     setIsSearching(false);
+    setResult(null);
+    setSearchStatus({ result: false, picked: true });
+    setTimeout(() => {
+      onDataSearch(result.data);
+      onCloseSearch();
+    }, 100);
   };
 
   const onMediaPick = (id) => {
+    if (searching) return;
+    setIsSearching(true);
     let currType = searchResults[0].Type === "series" ? "series" : "movie";
     let dataLocation = searchType === "series" ? "values" : "Search";
     grafService.getMediaData({ imdbID: id, type: currType }).then((data) => {
@@ -174,11 +182,14 @@ const SearchContainer = (props) => {
     });
   };
 
-  let searchContainerClass = searching ? "search-ongoing " : "";
+  let searchContainerClass = searching ? "search-ongoing search-with-result-loading " : "";
   searchContainerClass +=
-    result || searchStatus.result ? "search-with-result" : "";
+    result || searchStatus.result ? `search-with-result ${searching ? "" : ""}` : "";
   // console.log(result);
-  const resultsClass = !result && searchStatus.result && !searchStatus.picked ? "result-overflow" : "";
+  const resultsClass =
+    !result && searchStatus.result && !searchStatus.picked
+      ? "result-overflow"
+      : "";
   return (
     <div
       className={`search-container flex column align-center space-start ${openClass} ${searchContainerClass}`}
@@ -213,8 +224,10 @@ const SearchContainer = (props) => {
         />
       </form>
 
-      <div className={`result-container ${resultsClass}`}>
-        {result ? (
+      <div className={`result-container ${resultsClass} flex align-center space-center`}>
+        {searching ? (
+          <LoadingRing theme={theme} />
+        ) : result ? (
           <DataPreview
             onDataSelect={onDataSelect}
             data={result.Type === "series" ? resultInfo : result}

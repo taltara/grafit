@@ -4,7 +4,7 @@ import { useSpring, animated } from "react-spring";
 import Tilt from "react-tilt";
 
 function SearchOptionsItem(props) {
-  const { item, index, onMediaPick, itemClass } = props;
+  const { item, index, onMediaPick, itemClass, picked } = props;
 
   const [key, setKey] = useState(1);
   const [isHovering, setIsHovering] = useState(false);
@@ -15,24 +15,46 @@ function SearchOptionsItem(props) {
 
   const getAnimationDelay = () => {
     const baseMs = 100;
-    const delayBump = 175;
+    const delayBump = 150;
     return baseMs + (index + 1) * delayBump;
   };
 
   const [itemDelay, setItemDelay] = useState(getAnimationDelay());
 
   useEffect(() => {
-    const timeout =
-      entranceClass === "start" || entranceClass === "preview-entrance"
-        ? 100
-        : 600;
-    if (entranceClass !== "") {
-      setEntranceClass("");
-      setTimeout(() => {
-        setEntranceClass("preview-entrance");
-      }, timeout);
+    
+    // return setTimeout(() => {
+    //   setExitClass("preview-exit");
+    // }, itemDelay / 3);
+  }, []);
+
+  useEffect(() => {
+    if(showingItem) {
+
+      const timeout =
+        entranceClass === "start" || entranceClass === "preview-entrance"
+          ? 100
+          : 600;
+      if (entranceClass !== "") {
+        setEntranceClass("");
+        setTimeout(() => {
+          setEntranceClass("preview-entrance");
+        }, timeout);
+      }
     }
   }, [showingItem]);
+
+  useEffect(() => {
+    if (picked !== "") {
+      if (picked === index) {
+        setExitClass("preview-exit");
+      } else {
+        setTimeout(() => {
+          setExitClass("preview-exit");
+        }, itemDelay / 3);
+      }
+    }
+  }, [picked]);
 
   const msPerLetter = 115;
   const longTextLimit = 27;
@@ -60,24 +82,24 @@ function SearchOptionsItem(props) {
     },
   });
 
+  const onItemClick = () => {
+    // setExitClass("preview-exit");
+    onMediaPick(showingItem.id, index);
+  };
+
   const optionBackground =
     showingItem.img === "N/A" || !showingItem.img
       ? "rgba(32, 33, 36, 0.99)"
       : `url(${showingItem.img})`;
 
-  const itemAnimation = `${itemDelay}ms cubic-bezier(0.03,0.98,0.52,0.99)`;
+  const itemAnimation = `${itemDelay}ms`;
   return (
     <li
       className={`search-options-item item-${itemClass} ${entranceClass} ${exitClass} flex align-center space-center`}
       style={{
-        transition: itemAnimation,
+        transitionDuration: itemAnimation,
       }}
-      onClick={() => {
-        setExitClass("preview-exit");
-        setTimeout(() => {
-          onMediaPick(showingItem.id);
-        }, 100);
-      }}
+      onClick={onItemClick}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >

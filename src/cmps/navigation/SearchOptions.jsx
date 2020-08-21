@@ -8,34 +8,43 @@ const SearchOptions = (props) => {
   const [showingOptions, setShowingOptions] = useState([]);
   const [entranceClass, setEntranceClass] = useState("start");
   const [exitClass, setExitClass] = useState("");
+  const [picked, setPicked] = useState("");
 
   useEffect(() => {
+    
+    
+  }, []);
+  
+  useEffect(() => {
     console.log(entranceClass);
-    const timeout =
-      entranceClass === "start" || entranceClass === "preview-entrance"
-        ? 100
-        : 600;
-    if (entranceClass !== "") {
-      setEntranceClass("");
-      setTimeout(() => {
-        setEntranceClass("preview-entrance");
-      }, timeout);
+    if(showingOptions) {
+
+      const timeout =
+        entranceClass === "start" || entranceClass === "preview-entrance"
+          ? 100
+          : 600;
+      if (entranceClass !== "") {
+        setEntranceClass("");
+        setTimeout(() => {
+          setEntranceClass("preview-entrance");
+        }, timeout);
+      }
+
     }
   }, [showingOptions]);
 
-  const onItemClick = (id) => {
-    setExitClass("preview-exit");
+  const onItemClick = (id, index) => {
+    setPicked(index);
     setTimeout(() => {
-        setShowingOptions(null); 
-    }, 50);
-    // setTimeout(() => {
-    // }, 100);
-    onMediaPick(id);
-  }
+      setExitClass("preview-exit");
+      setShowingOptions(null);
+      onMediaPick(id);
+    }, 500);
+  
+  };
 
   useEffect(() => {
     if (options && options !== showingOptions && options.length) {
-      
       setEntranceClass("");
       setTimeout(() => {
         setShowingOptions(options);
@@ -44,16 +53,29 @@ const SearchOptions = (props) => {
     }
   }, [options]);
 
-  useEffect(() => {
-    
-  }, [showingOptions]);
+  useEffect(() => {}, [showingOptions]);
 
   return (
-    <ul className={`search-options ${entranceClass} ${exitClass} flex column align-start space-start`}>
+    <ul
+      className={`search-options ${entranceClass} ${exitClass} flex column align-start space-start`}
+    >
       {showingOptions
         ? showingOptions.map((item, index) => {
-            const itemClass = !index ? "first" : index === showingOptions.length - 1 ? "last" : "middle";
-            return <SearchOptionsItem key={index} item={item} index={index} onMediaPick={onItemClick} itemClass={itemClass} />;
+            const itemClass = !index
+              ? "first"
+              : index === showingOptions.length - 1
+              ? "last"
+              : "middle";
+            return (
+              <SearchOptionsItem
+                key={index}
+                item={item}
+                index={index}
+                onMediaPick={onItemClick}
+                itemClass={itemClass}
+                picked={picked}
+              />
+            );
           })
         : null}
     </ul>

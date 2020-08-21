@@ -135,6 +135,8 @@ const MenuToolbar = (props) => {
       <SearchContainer
         onDataSearch={onDataSearch}
         isSearchOpen={isSearchOpen}
+        theme={theme}
+        onCloseSearch={onCloseSearch}
       />
     ) : (
       []

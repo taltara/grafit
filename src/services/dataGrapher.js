@@ -63,7 +63,6 @@ const fitMovieData = (data) => {
   return Promise.resolve({
     actors: data.Actors.split(", "),
     awards: data.Awards,
-    // boxOffice: +data.BoxOffice.slice(1).replace(/,/gi, ""),
     boxOffice: data.BoxOffice,
     country: data.Country,
     dvd: data.DVD,

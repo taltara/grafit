@@ -20,19 +20,25 @@ const GrafitApp = (props) => {
     setCurrSearchType,
   } = props;
 
-  const [grafSeriesData, setGrafSeriesData] = useState(defData);
+  const [grafSeriesData, setGrafSeriesData] = useState({
+    starter: true,
+    dataSet: [],
+    name: "",
+    average: null,
+    episodeCount: null,
+  });
   const [grafMovieData, setGrafMovieData] = useState(null);
-  const [name, setName] = useState("The Office");
-  const [showInfo, setShowInfo] = useState(info);
+  const [name, setName] = useState("");
+  const [showInfo, setShowInfo] = useState({});
   const [snackbar, setSnackbar] = useState(false);
   const [isDataNew, SetIsDataNew] = useState(false);
-  const [average, setAverage] = useState(defData.average);
+  const [average, setAverage] = useState(null);
   const [error, setIsError] = useState(false);
   const [dataType, setDataType] = useState("series");
 
   const [showDescription, setShowDescription] = useState(false);
   const [dynamicHeight, setDynamicHeight] = useState({
-    height: window.innerHeight - 128,
+    height: 0,
     width: window.innerWidth - 10,
   });
 
@@ -41,6 +47,15 @@ const GrafitApp = (props) => {
     let ActiveTab;
     ActiveTab = getActiveTabByPath(currentTab);
     switchTab(ActiveTab);
+    setTimeout(() => {
+      setGrafSeriesData(defData);
+      setShowInfo(info);
+      setAverage(defData.average);
+      setName(defData.name)
+    }, 500);
+
+    updateDimensions();
+
     window.addEventListener("resize", () => {
       updateDimensions();
     });
@@ -50,13 +65,11 @@ const GrafitApp = (props) => {
   }, []);
 
   useEffect(() => {
-
     onDataChange(data);
     SetIsDataNew(true);
 
     setTimeout(() => {
       SetIsDataNew(false);
-
     }, 1000);
   }, [data]);
 
@@ -88,7 +101,6 @@ const GrafitApp = (props) => {
         setIsError(true);
         handleSnackbar();
       } else {
-
         dataGrapher.fitMovieData(newData).then((movieData) => {
           console.log(movieData);
 
@@ -103,12 +115,10 @@ const GrafitApp = (props) => {
     else {
       if (!newData.values) {
         if (!newData.starter) {
-
           setIsError(true);
           handleSnackbar();
         }
       } else {
-
         const seriesInfo = newData.seriesInfo;
 
         dataGrapher.fitShowtoGraf(newData.values).then((dataForGraf) => {
@@ -139,7 +149,7 @@ const GrafitApp = (props) => {
       return !prevState;
     });
   };
-
+  // console.log(grafSeriesData, showInfo);
   return (
     <main
       className={`main-graf ${theme === "dark" ? "dark-bgc" : "light-bgc"}`}
