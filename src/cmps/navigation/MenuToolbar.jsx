@@ -63,21 +63,11 @@ const MenuToolbar = (props) => {
   };
 
   useEffect(() => {
-    let currentTab = window.location.pathname;
+    // let currentTab = window.location.pathname;
 
     utilServices.setButtonRippleListeners("general");
 
-    switch (currentTab) {
-      case "/":
-        onSetTab("");
-        break;
-      case "/graf":
-        onSetTab("graf");
-        break;
-      default:
-        onSetTab("");
-        break;
-    }
+      onSetTab(activeTab);
   }, []);
 
   useEffect(() => {

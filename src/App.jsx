@@ -45,6 +45,9 @@ const App = (props) => {
       case "/graf":
         ActiveTab = "graf";
         break;
+      case "/about":
+        ActiveTab = "about";
+        break;
       default:
         ActiveTab = "home";
         break;

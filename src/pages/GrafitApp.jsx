@@ -43,16 +43,12 @@ const GrafitApp = (props) => {
   });
 
   useEffect(() => {
-    let currentTab = window.location.pathname;
-    let ActiveTab;
-    ActiveTab = getActiveTabByPath(currentTab);
-    switchTab(ActiveTab);
     setTimeout(() => {
       setGrafSeriesData(defData);
       setShowInfo(info);
       setAverage(defData.average);
       setName(defData.name)
-    }, 500);
+    }, 250);
 
     updateDimensions();
 
@@ -72,17 +68,6 @@ const GrafitApp = (props) => {
       SetIsDataNew(false);
     }, 1000);
   }, [data]);
-
-  const getActiveTabByPath = (currentTab) => {
-    switch (currentTab) {
-      case "/":
-        return "home";
-      case "/graf":
-        return "graf";
-      default:
-        return "home";
-    }
-  };
 
   const updateDimensions = () => {
     // console.log("CHNAGED!");

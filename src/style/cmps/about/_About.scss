@@ -1,7 +1,8 @@
 .about {
   height: 100%;
   padding-top: 100px;
-  font-family: animosaExtraLight;
+  font-family: animosaExtraBold;
+  // font-family: raleway;
 
   .utils-user-icon {
     transition: 0.35s cubic-bezier(0.42, 0.5, 0.25, 1);
@@ -16,16 +17,22 @@
     }
     &:hover {
       box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.75);
-      transform: scale(1.05);
     }
   }
 
   .about-name {
     font-size: 30px;
-    margin-bottom: 7.5px;
+    margin-bottom: 12.5px;
   }
   .about-link {
     font-size: 20px;
+    width: 65px;
+    height: 65px;
+    transition: 0.5s cubic-bezier(0.42, 0.5, 0.25, 1);
+
+    &:hover {
+      transform: rotate(360deg) perspective(1000px);
+    }
   }
 
 }
